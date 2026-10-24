@@ -9,6 +9,6 @@
     "build": "echo Static portfolio ready for Vercel"
   },
   "engines": {
-    "node": ">=16"
+  "node": "22.x"
   }
 }
