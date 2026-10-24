@@ -1,0 +1,3105 @@
+{
+  "name": "AI Email + WhatsApp Outreach — Phase 2",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "5a760e54-24f3-4d5e-a4e0-44a4556113b3",
+      "name": "Admin Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8e5e5741-d3d3-4bf8-ba2e-d04e3777555f",
+              "name": "spreadsheetId",
+              "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+              "type": "string"
+            },
+            {
+              "id": "28a74bab-bda5-471c-a86a-e9a0a1d341de",
+              "name": "contactsSheet",
+              "value": "Contacts",
+              "type": "string"
+            },
+            {
+              "id": "151fbe18-d8b4-4f14-b3fd-3861954eb49b",
+              "name": "logSheet",
+              "value": "Send Log",
+              "type": "string"
+            },
+            {
+              "id": "66b75aab-0fce-4b2d-98fb-3dbc90a39f72",
+              "name": "blocklistSheet",
+              "value": "Blocklist",
+              "type": "string"
+            },
+            {
+              "id": "49485546-939b-4e15-b27b-f3ccd689a7de",
+              "name": "controlSheet",
+              "value": "Control",
+              "type": "string"
+            },
+            {
+              "id": "9a8e5d99-0cbf-49b6-8a0a-303aaad6d883",
+              "name": "adminEmail",
+              "value": "={{ $json.body.adminEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "235aafae-9fd4-4d96-8b25-751f7b949c70",
+              "name": "channel",
+              "value": "gmail",
+              "type": "string"
+            },
+            {
+              "id": "9474d83b-50ce-4f13-bdf4-4619d2ea9820",
+              "name": "default_channel",
+              "value": "gmail",
+              "type": "string"
+            },
+            {
+              "id": "569d8736-d3d6-4954-8af4-74a5d97943bb",
+              "name": "target_type",
+              "value": "Category",
+              "type": "string"
+            },
+            {
+              "id": "95ed5f48-3e48-4f64-a490-f51f82145cf4",
+              "name": "target_person",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "c8050c99-6b10-4943-a37b-7d8ff846c2ee",
+              "name": "target_rows",
+              "value": "5,12",
+              "type": "string"
+            },
+            {
+              "id": "a256caa4-2aa3-434e-a4b3-bec41d681f4b",
+              "name": "target_position",
+              "value": "AI/ML Engineer",
+              "type": "string"
+            },
+            {
+              "id": "57742c00-4c00-47a4-894c-d9c4b1389682",
+              "name": "target_city",
+              "value": "Lahore",
+              "type": "string"
+            },
+            {
+              "id": "68329005-fae4-4f82-9390-f0c51ec506dc",
+              "name": "target_tag",
+              "value": "Beginner",
+              "type": "string"
+            },
+            {
+              "id": "09fb3632-c3fb-494b-a2af-e4b457b2e6fe",
+              "name": "search_query",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "52b3b22d-dbcc-474c-bec7-d7d547ca4956",
+              "name": "search_max_results",
+              "value": 5,
+              "type": "number"
+            },
+            {
+              "id": "67209746-e26c-4290-8456-4c99edf60a0a",
+              "name": "search_min_score",
+              "value": 0.5,
+              "type": "number"
+            },
+            {
+              "id": "fa5d5dea-b62f-4f02-907b-7ee36bd563c2",
+              "name": "fuzzy",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "384d48cf-8597-49cd-83bd-67529efe650b",
+              "name": "package",
+              "value": "job_details_aiml",
+              "type": "string"
+            },
+            {
+              "id": "f41c5df6-ed02-439f-a610-64b7b765a5b0",
+              "name": "packages_json",
+              "value": "{\n \"job_details_aiml\": {\n  \"gmail\": {\n   \"subject\": \"Job Details: {{position}}\",\n   \"body\": \"Hello {{name}},\\n\\nWe have an opening for {{position}} in {{city}}. Please find the details below.\\n\\nRegards,\\nHexovate Solutions\"\n  },\n  \"whatsapp\": {\n   \"template_name\": \"job_details\",\n   \"language\": \"en\",\n   \"template_vars\": [\n    \"name\",\n    \"position\"\n   ],\n   \"text\": \"Hello {{name}}, we have a {{position}} opening in {{city}}. Reply YES to get the details.\"\n  }\n }\n}",
+              "type": "string"
+            },
+            {
+              "id": "1c77fe22-64ae-47d3-a657-55df0f0a0703",
+              "name": "package_by_category_json",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "07ea4c4b-8d3c-430d-89c1-38c186440fdf",
+              "name": "opt_out_text",
+              "value": "Reply STOP to stop receiving messages.",
+              "type": "string"
+            },
+            {
+              "id": "abf7c9c4-5383-4458-b6d1-6589650e6488",
+              "name": "attachment_mode",
+              "value": "none",
+              "type": "string"
+            },
+            {
+              "id": "1510d66d-dbdc-40f0-bfc5-020a59d5dafd",
+              "name": "attachment_file_ids",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "bbf8dad5-8442-42d0-9518-ed2074b852a1",
+              "name": "on_document_problem",
+              "value": "skip_document",
+              "type": "string"
+            },
+            {
+              "id": "97e5ab2b-6e6e-457d-ad61-89d709c0fc54",
+              "name": "gmail_max_mb",
+              "value": 25,
+              "type": "number"
+            },
+            {
+              "id": "860e75ab-4790-4bd7-886e-2b1343031bb9",
+              "name": "wa_doc_max_mb",
+              "value": 100,
+              "type": "number"
+            },
+            {
+              "id": "e3446a72-c8b2-45dd-a343-4996ead178f5",
+              "name": "check_text",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "707eb930-a72d-4a83-b9f3-5ac48ca9af9c",
+              "name": "wa_phone_number_id",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "bc3b99fc-f044-4f8f-aed5-cab99cb430dc",
+              "name": "wa_api_version",
+              "value": "v21.0",
+              "type": "string"
+            },
+            {
+              "id": "6707f370-e189-4f35-9bf6-9c3cdd44d776",
+              "name": "default_country_code",
+              "value": "+92",
+              "type": "string"
+            },
+            {
+              "id": "cb6e0028-4997-4135-a39d-2eeb8e41eb2e",
+              "name": "allowed_country_codes",
+              "value": "92,971,44,1",
+              "type": "string"
+            },
+            {
+              "id": "10bb6929-4b72-41d5-97c6-4c3b74602e34",
+              "name": "strict_mode",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "1a39c483-3998-4043-82d5-cb5298a0c2c2",
+              "name": "check_mx_record",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "27771e28-fb0e-42e3-8f97-2ae151743554",
+              "name": "dry_run",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "38c13486-4b5f-456c-9770-03f3be08139b",
+              "name": "require_admin_approval",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "3c10f061-7c85-4a8c-8b22-936e3ae97dcd",
+              "name": "max_per_run",
+              "value": 50,
+              "type": "number"
+            },
+            {
+              "id": "bb9d9a27-3c93-4162-aff3-3fef6b621a68",
+              "name": "gmail_per_day",
+              "value": 100,
+              "type": "number"
+            },
+            {
+              "id": "8edc8471-1b0b-4e42-ab0c-2f0b4b0d743b",
+              "name": "whatsapp_per_day",
+              "value": 200,
+              "type": "number"
+            },
+            {
+              "id": "dbf8dfeb-1e59-4bfb-ab0a-0d5262cf186a",
+              "name": "delay_min",
+              "value": 20,
+              "type": "number"
+            },
+            {
+              "id": "b8291aa6-c050-475d-b19a-c1e933d2e0ba",
+              "name": "delay_max",
+              "value": 60,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f3029ab8-63ab-4dab-a4ba-4016e7e3e283",
+      "name": "Admin Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// VALIDATE CONFIGURATION (Phase 2)\n// ==========================================\nconst input = $input.first().json;\nconst errors = [];\n\nconst isTrue = (v, d) => {\n  if (typeof v === 'boolean') return v;\n  if (v === undefined || v === null || String(v).trim() === '') return d;\n  return /^(true|yes|y|1)$/i.test(String(v).trim());\n};\nconst asNum = (v, d) => {\n  if (v === '' || v === null || v === undefined) return d;\n  const n = Number(v);\n  return Number.isFinite(n) ? n : d;\n};\nconst asList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst asJson = (v, d, label) => {\n  if (v && typeof v === 'object') return v;\n  const s = String(v ?? '').trim();\n  if (!s) return d;\n  try { return JSON.parse(s); } catch (e) { errors.push(`${label} is not valid JSON`); return d; }\n};\n\n// Spreadsheet ID (a full URL is accepted too)\nlet spreadsheetId = String(input.spreadsheetId ?? '').trim();\nconst urlMatch = spreadsheetId.match(/\\/d\\/([a-zA-Z0-9_-]+)/);\nif (urlMatch) spreadsheetId = urlMatch[1];\n\nconst adminEmail = String(input.adminEmail ?? '').trim();\nconst channel = String(input.channel || 'gmail').trim().toLowerCase();\nconst default_channel = String(input.default_channel || 'gmail').trim().toLowerCase();\nconst target_type = String(input.target_type || '').trim().toLowerCase();\nconst packages = asJson(input.packages_json, {}, 'packages_json');\nconst package_by_category = asJson(input.package_by_category_json, {}, 'package_by_category_json');\nconst pkgName = String(input.package || '').trim();\nconst attachment_mode = String(input.attachment_mode || 'none').trim().toLowerCase();\nconst attachment_file_ids = asList(input.attachment_file_ids);\nconst dry_run = isTrue(input.dry_run, true);\nconst require_admin_approval = isTrue(input.require_admin_approval, true);\nconst default_country_code = String(input.default_country_code || '+92').trim();\nconst allowed_country_codes = asList(input.allowed_country_codes).map(c => '+' + c.replace(/^\\+/, ''));\nif (!allowed_country_codes.includes(default_country_code)) allowed_country_codes.push(default_country_code);\n\nconst limits = {\n  max_per_run: asNum(input.max_per_run, 50),\n  gmail_per_day: asNum(input.gmail_per_day, 100),\n  whatsapp_per_day: asNum(input.whatsapp_per_day, 200),\n  delay_min: asNum(input.delay_min, 20),\n  delay_max: asNum(input.delay_max, 60)\n};\n\n// ---- validation ----\nif (!spreadsheetId || spreadsheetId === 'PASTE_GOOGLE_SHEET_ID') errors.push('spreadsheetId missing');\nif (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(adminEmail) || adminEmail === 'contact@example.com') errors.push('adminEmail missing or still the placeholder');\nif (!['gmail', 'whatsapp', 'both', 'auto'].includes(channel)) errors.push(`Invalid channel: \"${channel}\" (use gmail | whatsapp | both | auto)`);\nif (!['gmail', 'whatsapp'].includes(default_channel)) errors.push(`Invalid default_channel: \"${default_channel}\"`);\nif (!['person', 'rows', 'category', 'search', 'checkbox'].includes(target_type)) errors.push(`Invalid target_type: \"${target_type}\"`);\n\nconst hasCat = asList(input.target_position).length || asList(input.target_city).length || asList(input.target_tag).length;\nif (target_type === 'person' && !String(input.target_person ?? '').trim()) errors.push('target_person missing');\nif (target_type === 'rows' && !asList(input.target_rows).length) errors.push('target_rows missing');\nif (target_type === 'category' && !hasCat) errors.push('Category target needs target_position, target_city or target_tag');\nif (target_type === 'search' && !String(input.search_query ?? '').trim() && !hasCat && !String(input.target_person ?? '').trim()) errors.push('search_query missing');\n\nif (!pkgName || !packages[pkgName]) errors.push(`Package \"${pkgName}\" not found in packages_json`);\nif (!['none', 'specific', 'shuffle'].includes(attachment_mode)) errors.push(`Invalid attachment_mode: \"${attachment_mode}\"`);\nif (['specific', 'shuffle'].includes(attachment_mode) && !attachment_file_ids.length) errors.push('Attachment file IDs missing');\n\nconst usesWa = ['whatsapp', 'both', 'auto'].includes(channel);\nif (usesWa && !dry_run && !String(input.wa_phone_number_id ?? '').trim()) errors.push('wa_phone_number_id missing (needed to send on WhatsApp)');\nif (!/^\\+\\d{1,3}$/.test(default_country_code)) errors.push('default_country_code must look like +92');\nif (limits.max_per_run < 1) errors.push('max_per_run must be at least 1');\nif (limits.gmail_per_day < 1) errors.push('gmail_per_day must be at least 1');\nif (limits.whatsapp_per_day < 1) errors.push('whatsapp_per_day must be at least 1');\nif (limits.delay_min < 0) errors.push('delay_min cannot be negative');\nif (limits.delay_max < limits.delay_min) errors.push('delay_max must be greater than or equal to delay_min');\n\nconst gmailCheck = String(input.check_text ?? '').trim()\n  || String(packages[pkgName]?.gmail?.subject ?? '').replace(/\\{\\{.*?\\}\\}/g, '').trim();\n\nconst now = new Date();\nconst run_id = input.run_id || 'RUN-' + now.toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);\n\nreturn [{\n  json: {\n    ...input,\n    spreadsheetId,\n    adminEmail,\n    channel,\n    default_channel,\n    target_type,\n    packages,\n    package_by_category,\n    package: pkgName,\n    attachment_mode,\n    attachment_file_ids,\n    dry_run,\n    require_admin_approval,\n    strict_mode: isTrue(input.strict_mode, false),\n    check_mx_record: isTrue(input.check_mx_record, true),\n    fuzzy: isTrue(input.fuzzy, true),\n    default_country_code,\n    allowed_country_codes,\n    on_document_problem: String(input.on_document_problem || 'skip_document').trim().toLowerCase(),\n    search_max_results: asNum(input.search_max_results, 5),\n    search_min_score: asNum(input.search_min_score, 0.5),\n    wa_api_version: String(input.wa_api_version || 'v21.0').trim(),\n    wa_phone_number_id: String(input.wa_phone_number_id ?? '').trim(),\n    gmail_max_mb: asNum(input.gmail_max_mb, 25),\n    wa_doc_max_mb: asNum(input.wa_doc_max_mb, 100),\n    opt_out_text: String(input.opt_out_text ?? '').trim(),\n    gmail_check_text: gmailCheck,\n    ...limits,\n    run_id,\n    started_at: now.toISOString(),\n    config_valid: errors.length === 0,\n    validation_errors: errors\n  }\n}];\n"
+      },
+      "id": "e2d2e281-875c-401a-9f56-879aff90bc11",
+      "name": "Validate Configuration",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "12af308d-5327-422a-80f1-1d9ea30c31f9",
+              "leftValue": "={{ $json.config_valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c642ab94-b1f8-4989-8278-03dcf81f6bc7",
+      "name": "Config Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1168,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ 'Admin configuration is invalid: ' + $json.validation_errors.join('; ') }}"
+      },
+      "id": "a136b600-77a9-4762-85f1-130656915944",
+      "name": "Config Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        768
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\n\n// ==========================================\n// NORMALIZE & CLEAN CONTACTS\n// Tags/Category column has been replaced by Position.\n// Therefore category is also populated from Position for backward compatibility.\n// ==========================================\nconst cfg = $('Validate Configuration').first().json;\nconst defDial = String(cfg.default_country_code || '+92').replace('+', '');\nconst allowed = (cfg.allowed_country_codes || []).map(c => String(c).replace(/^\\+?/, ''));\nconst INVIS = /[​-‏‪-‮⁠﻿ ]/g;\n\nconst review = reason => ({ clean: '', status: 'Needs review', reason });\n\nfunction problemWith(out) {\n  const digits = out.slice(1);\n  if (defDial === '92' && digits.startsWith('92')) {\n    const rest = digits.slice(2);\n    if (rest.length < 10) return `only ${rest.length} digits after +92`;\n    if (rest.length > 10) return `too many digits (${rest.length} after +92)`;\n    if (rest[0] !== '3') return 'not a mobile number (a Pakistani mobile starts with 3)';\n    return '';\n  }\n  if (digits.length < 8 || digits.length > 15) return `invalid length (${digits.length} digits)`;\n  if (!(digits.startsWith(defDial) || allowed.some(c => digits.startsWith(c)))) return 'country code is not in the allowed list';\n  return '';\n}\n\nfunction cleanOne(tok) {\n  const original = String(tok).replace(INVIS, '').trim();\n  let s = original;\n  if (!s) return { clean: '', status: '', reason: '' };\n  const sci = s.match(/^(\\d+)(?:\\.(\\d+))?e\\+?(\\d+)$/i);\n  if (sci) {\n    const digits = sci[1] + (sci[2] || '');\n    const total = sci[1].length + Number(sci[3]);\n    if (digits.length !== total) return review('scientific notation (Excel lost digits)');\n    s = digits;\n  }\n  s = s.replace(/\\(\\s*0\\s*\\)/g, '');\n  const hasPlus = /^\\(?\\s*\\+/.test(s);\n  let d = s.replace(/\\D/g, '');\n  let out;\n  if (hasPlus) {\n    if (d.startsWith(defDial + '0') && d.length === defDial.length + 11) d = defDial + d.slice(defDial.length + 1);\n    out = '+' + d;\n  } else if (d.startsWith('00')) {\n    out = '+' + d.slice(2);\n  } else if (d.startsWith(defDial) && d.length === defDial.length + 10) {\n    out = '+' + d;\n  } else if (d.startsWith('0')) {\n    out = '+' + defDial + d.slice(1);\n  } else if (d.length === 10) {\n    out = '+' + defDial + d;\n  } else {\n    return review(`unrecognized format (${d.length} digits)`);\n  }\n  const problem = problemWith(out);\n  if (problem) return review(problem);\n  return { clean: out, status: out === original ? 'Valid' : 'Fixed', reason: '' };\n}\n\nfunction normalizeMobile(raw) {\n  const text = String(raw ?? '').replace(INVIS, '').trim();\n  if (!text) return { clean: '', status: '', reason: '', options: [] };\n  const tokens = text.split(/[\\/,;|\\n]|\\s+or\\s+/i).map(t => t.trim()).filter(t => t.replace(/\\D/g, '').length >= 6);\n  if (!tokens.length) return { ...review('no usable number found'), options: [] };\n  const results = tokens.map(cleanOne);\n  const valid = results.filter(r => r.clean);\n  if (tokens.length === 1) return { ...results[0], options: valid.map(r => r.clean) };\n  if (valid.length) return { clean: valid[0].clean, status: 'Fixed', reason: 'multiple numbers in one cell, using the first valid one', options: valid.map(r => r.clean) };\n  return { ...results[0], options: [] };\n}\n\nconst truthy = v => /^(yes|y|true|1|x|✓|✔)$/i.test(String(v ?? '').trim());\n// Google Sheets node is named Contacts; use current input so the node name never breaks.\nconst rows = $input.all().map(i => i.json);\nconst contacts = [];\n\nfor (const raw of rows) {\n  const g = getter(raw);\n  const name = String(g('Name', 'Full Name')).trim();\n  const email = String(g('Email', 'E-mail')).trim().toLowerCase();\n  const mobileRaw = g('Mobile', 'Mobile Number', 'Phone', 'Phone Number', 'WhatsApp');\n  if (!name && !email && !String(mobileRaw).trim()) continue;\n\n  const m = normalizeMobile(mobileRaw);\n  const cityCountry = String(g('City / Country', 'City', 'Location')).split(',').map(s => s.trim()).filter(Boolean);\n  const country = cityCountry.slice(1).join(', ') || String(g('Country')).trim();\n  const exp = parseFloat(g('Experience (years)', 'Experience', 'Years of Experience'));\n  const skills = String(g('Skills')).trim();\n  const pref = String(g('Preferred Channel')).trim().toLowerCase();\n\n  const position = String(g(\n    'Position',\n    'Job Position',\n    'Job Title',\n    'Role',\n    'Title'\n  )).trim();\n\n  const statusCell = m.status\n    ? (m.status === 'Needs review' && m.reason ? `Needs review: ${m.reason}` : m.status)\n    : '';\n  const existingClean = String(g('mobile_clean', 'Mobile (Clean)')).trim();\n  const existingStatus = String(g('number_status', 'Number Status')).trim();\n\n  contacts.push({\n    row_number: raw.row_number,\n    name,\n    email,\n    email_valid: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(email),\n    mobile_raw: String(mobileRaw ?? '').trim(),\n    mobile_clean: m.clean,\n    number_status: m.status,\n    number_reason: m.reason,\n    number_status_cell: statusCell,\n    mobile_options: m.options,\n    position,\n    // Backward compatibility: old target/package nodes can still use category/tag.\n    category: position,\n    tag: position,\n    skills,\n    skills_list: skills.split(/[,;\\/|]+/).map(s => s.trim()).filter(Boolean),\n    city: cityCountry[0] || '',\n    country,\n    experience: Number.isFinite(exp) ? exp : null,\n    preferred_channel: ['gmail', 'whatsapp', 'both'].includes(pref) ? pref : '',\n    wa_optin: truthy(g('WhatsApp Opt-in', 'WhatsApp Opt in', 'Opt-in')),\n    last_inbound: String(g('Last Inbound')).trim(),\n    selected: truthy(g('Select', 'Selected', 'Send', 'Checkbox')),\n    existing_gmail_status: String(g('Gmail Status')).trim(),\n    existing_wa_status: String(g('WhatsApp Status')).trim(),\n    existing_last_contacted: String(g('Last Contacted')).trim(),\n    sheet_changed: !!String(mobileRaw ?? '').trim() && (m.clean !== existingClean || statusCell !== existingStatus),\n    raw\n  });\n}\n\n// Duplicate mobile/email detection\nconst byMobile = new Map();\nconst byEmail = new Map();\nfor (const c of contacts) {\n  if (c.mobile_clean) {\n    if (!byMobile.has(c.mobile_clean)) byMobile.set(c.mobile_clean, []);\n    byMobile.get(c.mobile_clean).push(c);\n  }\n  if (c.email) {\n    if (!byEmail.has(c.email)) byEmail.set(c.email, []);\n    byEmail.get(c.email).push(c);\n  }\n}\nconst identity = c => c.email || normKey(c.name);\nfor (const c of contacts) {\n  c.mobile_conflict = false;\n  c.conflict_rows = [];\n  c.dup_in_sheet = false;\n  const sameMobile = c.mobile_clean ? byMobile.get(c.mobile_clean) : null;\n  if (sameMobile && sameMobile.length > 1) {\n    const others = sameMobile.filter(o => o !== c);\n    const different = others.filter(o => identity(o) !== identity(c));\n    if (different.length) {\n      c.mobile_conflict = true;\n      c.conflict_rows = different.map(o => o.row_number);\n    }\n    if (others.length > different.length) c.dup_in_sheet = true;\n  }\n  const sameEmail = c.email ? byEmail.get(c.email) : null;\n  if (sameEmail && sameEmail.length > 1) c.dup_in_sheet = true;\n}\n\nif (!contacts.length) return [{ json: { _empty: true } }];\nreturn contacts.map(c => ({ json: c }));\n"
+      },
+      "id": "9d4d4a5c-11a6-4d56-9f5f-5761adabbd28",
+      "name": "Normalize & Clean Contacts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        528,
+        864
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ad885b86-336f-4675-a944-998ab4a097e8",
+              "leftValue": "={{ $json.sheet_changed }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4faae106-bff3-4d6a-9956-d1e1c56cf000",
+      "name": "Changed Rows Only",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        864
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "022b1706-28a5-492a-bb24-5e008a992138",
+                    "leftValue": "={{ $('Validate Configuration').item.json.target_type }}",
+                    "rightValue": "Direct",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "search"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "direct"
+        }
+      },
+      "id": "9f60ded6-d92c-4aa4-bfab-a939c49b02a0",
+      "name": "Target Type Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        848,
+        1040
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst toList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst digitsOf = v => String(v ?? '').replace(/\\D/g, '');\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\nconst safeAll = name => { try { return $(name).all().map(i => i.json); } catch (e) { return []; } };\n\n// ==========================================\n// SMART SEARCH (filters + keyword + fuzzy, ranked)\n// ==========================================\nconst cfg = $('Validate Configuration').first().json;\nconst defDial = String(cfg.default_country_code || '+92').replace('+', '');\nconst phoneCore = v => digitsOf(v).replace(/^00/, '').replace(new RegExp('^' + defDial), '').replace(/^0+/, '');\nconst contacts = $input.all().map(i => i.json).filter(c => c && !c._empty);\nconst thr = cfg.fuzzy === false ? 0.9 : 0.82;\n\nconst vocab = { position: new Map(), skill: new Map(), city: new Map(), category: new Map() };\nconst addV = (t, v) => { const s = String(v || '').trim(); if (s) vocab[t].set(normKey(s), s); };\nfor (const c of contacts) {\n  addV('position', c.position); addV('city', c.city); addV('category', c.category);\n  for (const s of c.skills_list || []) addV('skill', s);\n}\n\n// Stricter than sim(): a phrase only matches a term if it is (nearly) equal, or is a single word that is part of the term\nconst gramSim = (gram, term) => {\n  const na = normKey(gram), nb = normKey(term);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (!/\\s/.test(String(gram).trim()) && na.length >= 3 && nb.includes(na)) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst criteria = [];\nconst addC = (type, value, label, weight = 1) => {\n  if (!criteria.some(c => c.type === type && normKey(c.value) === normKey(value))) criteria.push({ type, value, label, weight });\n};\nfor (const p of toList(cfg.target_position)) addC('position', p, `position: ${p}`);\nfor (const p of toList(cfg.target_city)) addC('city', p, `city: ${p}`);\nfor (const p of toList(cfg.target_tag)) addC('category', p, `category: ${p}`);\nfor (const w of String(cfg.target_person || '').split(/\\s+/).filter(w => normKey(w).length >= 2)) addC('name', w, `name: ${w}`);\n\nlet rest = String(cfg.search_query || '');\nconst yr = rest.match(/(\\d+(?:\\.\\d+)?)\\s*\\+?\\s*(?:years?|yrs?)\\b/i);\nif (yr) { addC('years', Number(yr[1]), `${yr[1]}+ years of experience`); rest = rest.replace(yr[0], ' '); }\nconst ph = rest.match(/(\\+?\\d[\\d\\s\\-()]{2,}\\d)/);\nif (ph && digitsOf(ph[1]).length >= 3) { addC('phone', phoneCore(ph[1]), `mobile ${ph[1].trim()}`, 3); rest = rest.replace(ph[0], ' '); }\n\nconst stop = new Set(('find the a an with who whose person people candidate candidates and in at of for to mobile number ends end ending phone years year ' +\n  'experience has have having knows know skilled skills skill from based located email him her them send that one this requirement requirements interview schedule whatsapp ' +\n  'is are or on by me my').split(' '));\nconst words = rest.replace(/[,;]+/g, ' ').split(/\\s+/).filter(Boolean);\nconst used = new Array(words.length).fill(false);\nfor (const size of [3, 2, 1]) {\n  for (let i = 0; i + size <= words.length; i++) {\n    if (used.slice(i, i + size).some(Boolean)) continue;\n    const gram = words.slice(i, i + size).join(' ');\n    if (size === 1 && (stop.has(gram.toLowerCase()) || normKey(gram).length < 2)) continue;\n    let best = { type: null, term: null, score: 0 };\n    for (const type of ['position', 'skill', 'city', 'category']) {\n      for (const term of vocab[type].values()) {\n        const sc = gramSim(gram, term);\n        if (sc > best.score) best = { type, term, score: sc };\n      }\n    }\n    if (best.score >= thr) {\n      addC(best.type, best.term, `${best.type}: ${best.term}`);\n      for (let j = i; j < i + size; j++) used[j] = true;\n    }\n  }\n}\nwords.forEach((w, i) => {\n  if (!used[i] && !stop.has(w.toLowerCase()) && normKey(w).length >= 3) addC('name', w, `name: ${w}`);\n});\n\nif (!criteria.length) {\n  return [{ json: { _empty: true, message: 'The search query had no recognizable requirement (position, skill, city, years, name or mobile).' } }];\n}\n\nconst memo = new Map();\nconst msim = (a, b) => {\n  const k = a + '\\u0001' + b;\n  if (!memo.has(k)) memo.set(k, sim(a, b));\n  return memo.get(k);\n};\nconst total = criteria.reduce((s, c) => s + c.weight, 0);\nconst scored = [];\nfor (const c of contacts) {\n  let got = 0;\n  const matched = [], missed = [];\n  for (const cr of criteria) {\n    let ok = false;\n    switch (cr.type) {\n      case 'position': ok = msim(c.position, cr.value) >= thr; break;\n      case 'skill': ok = (c.skills_list || []).some(s => msim(s, cr.value) >= thr); break;\n      case 'city': ok = msim(c.city, cr.value) >= thr || msim(c.country, cr.value) >= thr; break;\n      case 'category': ok = msim(c.category, cr.value) >= thr; break;\n      case 'years': ok = c.experience !== null && c.experience >= cr.value; break;\n      case 'phone': ok = [c.mobile_clean, ...(c.mobile_options || [])].some(m => m && digitsOf(m).endsWith(cr.value)); break;\n      case 'name': ok = String(c.name).split(/\\s+/).some(w => msim(w, cr.value) >= thr); break;\n    }\n    if (ok) { got += cr.weight; matched.push(cr.label); } else missed.push(cr.label);\n  }\n  if (got > 0) scored.push({ c, score: got / total, matched, missed });\n}\nscored.sort((a, b) => b.score - a.score || (b.c.experience ?? 0) - (a.c.experience ?? 0));\n\nconst max = Math.max(1, cfg.search_max_results || 5);\nlet top = scored.filter(s => s.score >= cfg.search_min_score).slice(0, max);\nlet weak = false;\nif (!top.length) { top = scored.slice(0, 3); weak = true; }\nif (!top.length) {\n  return [{ json: { _empty: true, message: 'No one in the sheet matches this requirement.' } }];\n}\nreturn top.map((s, i) => ({\n  json: { ...s.c, match_score: Math.round(s.score * 100), matched: s.matched, missed: s.missed, search_rank: i + 1, search_weak: weak }\n}));\n"
+      },
+      "id": "c1540101-e53d-441e-a524-e10c09e96b76",
+      "name": "Smart Search",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1712,
+        1280
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "fec010ad-5a84-4222-847b-79274a98ea5d",
+              "leftValue": "={{ !$json._empty }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3985faaf-faa9-443a-a9f2-0a9cb1b0a168",
+      "name": "Search Matches Found?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1952,
+        1280
+      ]
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $json.message || 'No match found for this requirement.' }}"
+      },
+      "id": "0dd43e88-771b-4f95-833b-993e4f1edd43",
+      "name": "No Match Notice",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        2224,
+        1472
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst toList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst digitsOf = v => String(v ?? '').replace(/\\D/g, '');\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\nconst safeAll = name => { try { return $(name).all().map(i => i.json); } catch (e) { return []; } };\n\n// Build the \"pick the right person\" email for the Admin\nconst res = $input.all().map(i => i.json);\nconst weak = res.some(r => r.search_weak);\nconst rows = res.map(r => `<tr>\n<td>${r.search_rank}</td><td>${r.row_number}</td><td>${esc(r.name)}</td><td>${esc(r.position)}</td><td>${esc(r.city)}</td>\n<td>${esc(r.email)}</td><td>${esc(r.mobile_clean || r.mobile_raw)}</td><td>${r.match_score}%</td>\n<td>${esc((r.matched || []).join('; '))}</td><td>${esc((r.missed || []).join('; '))}</td></tr>`).join('');\nconst html = `<h3>Smart Search: please confirm the person</h3>\n${weak ? '<p><b>No strong match was found.</b> These are the closest results.</p>' : ''}\n<table border=\"1\" cellpadding=\"4\" cellspacing=\"0\">\n<tr><th>#</th><th>Row</th><th>Name</th><th>Position</th><th>City</th><th>Email</th><th>Mobile</th><th>Match</th><th>Matched</th><th>Missed</th></tr>${rows}</table>\n<p>Reply with the <b>rank number(s)</b> to send to (for example <b>1</b> or <b>1,3</b>), <b>all</b> to send to everyone listed, or <b>none</b> to cancel.</p>`;\nreturn [{ json: { html } }];\n"
+      },
+      "id": "4db10489-9224-4380-b1c3-278e76ec7d58",
+      "name": "Build Match Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2192,
+        1264
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "={{ $('Validate Configuration').first().json.adminEmail }}",
+        "subject": "={{ 'Confirm the person: ' + $('Validate Configuration').first().json.run_id }}",
+        "message": "={{ $json.html }}",
+        "responseType": "freeText",
+        "options": {}
+      },
+      "id": "4736ddca-34f3-4171-8a66-b45508c4fd8a",
+      "name": "Admin Confirm Match",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2416,
+        1264
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst toList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst digitsOf = v => String(v ?? '').replace(/\\D/g, '');\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\nconst safeAll = name => { try { return $(name).all().map(i => i.json); } catch (e) { return []; } };\n\n// Turn the Admin's reply into the confirmed target list\nconst res = safeAll('Smart Search').filter(r => !r._empty);\nconst j = $input.first().json;\nconst reply = String(j.data?.text ?? j.text ?? Object.values(j.data || {})[0] ?? '').trim();\nif (!reply || /^(none|no|cancel|stop|0)$/i.test(reply)) {\n  return [{ json: { _empty: true, target_error: `The Admin did not confirm anyone (reply: \"${reply || 'empty'}\").` } }];\n}\nlet picked;\nif (/^all$/i.test(reply)) picked = res;\nelse {\n  const nums = new Set(reply.split(/[^0-9]+/).filter(Boolean).map(Number));\n  picked = res.filter(r => nums.has(r.search_rank));\n}\nif (!picked.length) return [{ json: { _empty: true, target_error: `The reply \"${reply}\" did not match any listed rank.` } }];\nreturn picked.map(p => ({ json: { ...p, target_source: 'search', not_found: [], admin_reply: reply } }));\n"
+      },
+      "id": "dc40f37f-367b-4970-b7de-186609e71266",
+      "name": "Apply Admin Pick",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2784,
+        1264
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// SELECT TARGETS - Position column only\n// Category/Tags column is no longer used.\n// Matching uses Position + City.\n\nconst cfg = $('Validate Configuration').first().json;\nconst contacts = $input.all()\n  .map(item => item.json)\n  .filter(row => row && !row._empty);\n\nconst scalar = value => Array.isArray(value)\n  ? (value.length ? value[0] : '')\n  : value;\n\nconst list = value => {\n  const values = Array.isArray(value) ? value : [value];\n  return values\n    .flatMap(item => String(item ?? '').split(/[,;\\n]+/))\n    .map(item => item.trim())\n    .filter(Boolean);\n};\n\nconst clean = value => String(value ?? '')\n  .toLowerCase()\n  .normalize('NFKC')\n  .replace(/[\\u200B-\\u200D\\uFEFF]/g, '')\n  .replace(/&/g, ' and ')\n  .replace(/[^a-z0-9]+/g, ' ')\n  .trim();\n\nconst key = value => clean(value).replace(/\\s+/g, '');\n\nconst levenshtein = (a, b) => {\n  if (a === b) return 0;\n  const previous = Array.from({ length: b.length + 1 }, (_, index) => index);\n  for (let i = 1; i <= a.length; i++) {\n    const current = [i];\n    for (let j = 1; j <= b.length; j++) {\n      current[j] = Math.min(\n        previous[j] + 1,\n        current[j - 1] + 1,\n        previous[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1),\n      );\n    }\n    for (let j = 0; j < current.length; j++) previous[j] = current[j];\n  }\n  return previous[b.length];\n};\n\nconst similarity = (left, right) => {\n  const a = key(left);\n  const b = key(right);\n  if (!a || !b) return 0;\n  if (a === b) return 1;\n  if (a.includes(b) || b.includes(a)) return 0.95;\n  return 1 - levenshtein(a, b) / Math.max(a.length, b.length);\n};\n\nconst wanted = value => list(value).map(clean).filter(Boolean);\n\nconst flatten = value => {\n  if (Array.isArray(value)) return value.flatMap(flatten);\n  if (value && typeof value === 'object') return Object.values(value).flatMap(flatten);\n  return String(value ?? '').trim() ? [String(value)] : [];\n};\n\nconst getValues = (row, aliases) => {\n  const aliasKeys = aliases.map(key);\n  return Object.entries(row).flatMap(([header, value]) =>\n    aliasKeys.includes(key(header)) ? flatten(value) : []\n  );\n};\n\nconst match = (rowValues, wantedValues) => wantedValues.some(wantedValue =>\n  rowValues.some(rowValue => similarity(rowValue, wantedValue) >= 0.75)\n);\n\nconst getFirst = (row, aliases) => getValues(row, aliases)[0] || '';\nconst rawType = scalar(cfg.target_type);\nlet targetType = clean(rawType);\n\n// Position is the only classification field now.\nconst positionFilter = cfg.target_position || cfg.position || cfg.target_tag || cfg.category || '';\nconst cityFilter = cfg.target_city || cfg.city || '';\nconst positions = wanted(positionFilter);\nconst cities = wanted(cityFilter);\n\nif (!['person', 'rows', 'category', 'search', 'checkbox'].includes(targetType)) {\n  targetType = (positions.length || cities.length) ? 'category' : targetType;\n}\n\nconst notFound = [];\nconst fail = message => [{\n  json: {\n    _empty: true,\n    target_found: false,\n    target_error: message,\n    received_target_type: rawType,\n    received_filters: {\n      position: list(positionFilter),\n      city: list(cityFilter),\n      category_filter_ignored: list(cfg.target_tag || cfg.category || ''),\n    },\n    not_found: notFound,\n  },\n}];\n\nlet targets = [];\n\nif (targetType === 'category') {\n  targets = contacts.filter(row => {\n    const rowPositions = getValues(row, [\n      'Position', 'Job Position', 'Job Title', 'Role', 'Title', 'position'\n    ]);\n    const rowCities = getValues(row, [\n      'City', 'City / Country', 'Location', 'Country', 'city'\n    ]);\n\n    const positionOK = !positions.length || match(rowPositions, positions);\n    const cityOK = !cities.length || match(rowCities, cities);\n\n    return positionOK && cityOK;\n  });\n\n  if (!targets.length) {\n    return fail(\n      'No people matched Position/City. ' +\n      'Position filter=[' + positions.join(', ') + '], ' +\n      'City filter=[' + cities.join(', ') + ']. ' +\n      'The old Category/Tag filter is ignored because the sheet now uses Position.'\n    );\n  }\n} else if (targetType === 'person') {\n  const query = clean(cfg.target_person || cfg.person || '');\n  targets = contacts.filter(row => {\n    const name = getFirst(row, ['Name', 'Full Name']);\n    const email = getFirst(row, ['Email', 'E-mail']);\n    return similarity(name, query) >= 0.85 || clean(email) === query;\n  });\n  if (!targets.length) return fail('Person was not found in the Contacts sheet.');\n} else if (targetType === 'rows') {\n  const requested = new Set(list(cfg.target_rows || cfg.rows)\n    .filter(value => /^\\d+$/.test(value))\n    .map(Number));\n  targets = contacts.filter(row => requested.has(Number(getFirst(row, ['row_number', 'Row Number', 'Row ID', 'row']))));\n  if (!targets.length) return fail('None of the requested rows exist in the Contacts sheet.');\n} else if (targetType === 'checkbox') {\n  targets = contacts.filter(row => {\n    const value = clean(getFirst(row, ['Select', 'Send', 'Selected', 'Checkbox']));\n    return ['yes', 'true', '1', 'y', 'checked'].includes(value);\n  });\n  if (!targets.length) return fail('No selected rows were found in the Contacts sheet.');\n} else if (targetType === 'search') {\n  return contacts.map(row => ({\n    json: { ...row, target_source: 'search', target_found: true, not_found: notFound }\n  }));\n} else {\n  return fail('Unsupported target_type. Use category, person, rows, search or checkbox.');\n}\n\nreturn targets.map(row => ({\n  json: {\n    ...row,\n    target_source: targetType,\n    target_found: true,\n    not_found: notFound,\n  },\n}));\n"
+      },
+      "id": "bb8c054f-a39e-465f-84fb-f224242727be",
+      "name": "Select Targets",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        1056
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "db986ceb-b5f9-4aec-8830-98faf8a76b55",
+              "leftValue": "={{ !$json._empty }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "22c761a3-72c6-492d-b7d2-bac17f017287",
+      "name": "Targets Found?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1712,
+        1056
+      ]
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ ($json.target_error || 'No targets found.') + (($json.not_found || []).length ? ' Not found: ' + $json.not_found.join(', ') : '') }}"
+      },
+      "id": "d22617bc-d923-42c9-b53e-bc1421bbbae6",
+      "name": "No Targets Notice",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1968,
+        1120
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst toList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst digitsOf = v => String(v ?? '').replace(/\\D/g, '');\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\nconst safeAll = name => { try { return $(name).all().map(i => i.json); } catch (e) { return []; } };\n\n// Maximum recipients per run (protects against a wrong filter)\nconst cfg = $('Validate Configuration').first().json;\nconst all = $input.all().map(i => i.json);\nconst kept = all.slice(0, cfg.max_per_run);\nreturn kept.map(p => ({ json: { ...p, total_targeted: all.length, truncated_count: all.length - kept.length } }));\n"
+      },
+      "id": "6db25ebc-6975-4055-9d52-7cdc600b10bb",
+      "name": "Apply Max Recipients",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2224,
+        1040
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst toList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst digitsOf = v => String(v ?? '').replace(/\\D/g, '');\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\nconst safeAll = name => { try { return $(name).all().map(i => i.json); } catch (e) { return []; } };\n\n// ==========================================\n// RESOLVE PACKAGE & BUILD PERSONALISED MESSAGES\n// Only the chosen package is used. No extra sheet data is added.\n// ==========================================\nconst cfg = $('Validate Configuration').first().json;\nconst people = $input.all().map(i => i.json).filter(p => p && !p._empty);\nconst byCat = cfg.package_by_category || {};\n\nconst lookup = (p, key) => {\n  const k = normKey(key);\n  const aliases = {\n    name: ['Name', 'Full Name', 'Candidate Name'],\n    email: ['Email', 'Email Address'],\n    mobile: ['mobile_clean', 'Mobile (Clean)', 'Mobile', 'Phone', 'Phone Number'],\n    phone: ['mobile_clean', 'Mobile (Clean)', 'Mobile', 'Phone', 'Phone Number'],\n    position: ['Position', 'Job Position', 'Job Title', 'Role', 'Title'],\n    skills: ['Skills', 'Skill Set', 'Technologies'],\n    city: ['City', 'City / Country', 'Location'],\n    country: ['Country', 'City / Country', 'Location'],\n    experience: ['Experience', 'Years of Experience'],\n    category: ['Category', 'Category / Tag', 'Category Tag', 'Tag', 'Level', 'Seniority', 'Type'],\n    tag: ['Category', 'Category / Tag', 'Category Tag', 'Tag', 'Level', 'Seniority', 'Type']\n  };\n  const names = aliases[k] || [key];\n  const source = p || {};\n  const map = {};\n  Object.keys(source).forEach(function (header) {\n    map[normKey(header)] = source[header];\n  });\n  for (const name of names) {\n    const value = map[normKey(name)];\n    if (value !== undefined && value !== null && String(value).trim() !== '') return value;\n  }\n  return '';\n};\nconst render = (tpl, p, missing, escape) => String(tpl ?? '').replace(/\\{\\{\\s*([^{}]+?)\\s*\\}\\}/g, (m, key) => {\n  const v = lookup(p, key);\n  if (v === '' || v === undefined || v === null) { missing.add(key.trim()); return ''; }\n  return escape ? esc(v) : String(v);\n});\n\nreturn people.map(p => {\n  const catKey = Object.keys(byCat).find(k => normKey(k) === normKey(p.category) || normKey(k) === normKey(p.position));\n  const pkgName = catKey ? byCat[catKey] : cfg.package;\n  const pkg = (cfg.packages || {})[pkgName];\n  const missing = new Set();\n  let gmail_subject = '', gmail_body = '', wa_text = '', wa_template_name = '', wa_template_lang = 'en', wa_template_params = [];\n  if (!pkg) {\n    missing.add(`package \"${pkgName}\"`);\n  } else {\n    if (pkg.gmail) {\n      gmail_subject = render(pkg.gmail.subject, p, missing, false).trim();\n      gmail_body = render(pkg.gmail.body, p, missing, true).replace(/\\r?\\n/g, '<br>');\n      if (cfg.opt_out_text && gmail_body) gmail_body += '<br><br>' + esc(cfg.opt_out_text);\n    }\n    if (pkg.whatsapp) {\n      wa_text = render(pkg.whatsapp.text, p, missing, false).trim();\n      if (cfg.opt_out_text && wa_text) wa_text += '\\n\\n' + cfg.opt_out_text;\n      wa_template_name = String(pkg.whatsapp.template_name || '').trim();\n      wa_template_lang = String(pkg.whatsapp.language || 'en').trim();\n      wa_template_params = (pkg.whatsapp.template_vars || []).map(v => {\n        const val = lookup(p, v);\n        if (val === '' || val === undefined || val === null) { missing.add(String(v)); return ''; }\n        return String(val);\n      });\n    }\n  }\n  const rest = { ...p };\n  delete rest.raw;\n  rest.name = lookup(p, 'name');\n  rest.email = lookup(p, 'email');\n  rest.mobile_clean = lookup(p, 'mobile');\n  rest.position = lookup(p, 'position');\n  rest.city = lookup(p, 'city');\n  rest.category = lookup(p, 'category');\n  return { json: { ...rest, package: pkgName, gmail_subject, gmail_body, wa_text, wa_template_name, wa_template_lang, wa_template_params, missing_fields: [...missing] } };\n});\n"
+      },
+      "id": "d5355b43-2a69-45f5-b5fd-d906451271cb",
+      "name": "Resolve Package & Messages",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        1328
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst toList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst digitsOf = v => String(v ?? '').replace(/\\D/g, '');\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\nconst safeAll = name => { try { return $(name).all().map(i => i.json); } catch (e) { return []; } };\n\n// ==========================================\n// RESOLVE CHANNELS: one item per person per channel\n// ==========================================\nconst cfg = $('Validate Configuration').first().json;\nconst people = $input.all().map(i => i.json).filter(p => p && !p._empty);\nconst ids = cfg.attachment_file_ids || [];\nconst pickDoc = () => {\n  if (cfg.attachment_mode === 'specific') return ids[0] || '';\n  if (cfg.attachment_mode === 'shuffle') return ids.length ? ids[Math.floor(Math.random() * ids.length)] : '';\n  return '';\n};\nconst out = [];\nfor (const p of people) {\n  let chans;\n  if (cfg.channel === 'both') chans = ['gmail', 'whatsapp'];\n  else if (cfg.channel === 'auto') {\n    const pref = p.preferred_channel || cfg.default_channel;\n    chans = pref === 'both' ? ['gmail', 'whatsapp'] : [pref];\n  } else chans = [cfg.channel];\n  const doc = pickDoc();\n  for (const channel of chans) {\n    out.push({ json: { ...p, channel, document_id: doc, send_document: !!doc,\n      person_key: p.email || p.mobile_clean || `row-${p.row_number}` } });\n  }\n}\nreturn out.length ? out : [{ json: { _empty: true } }];\n"
+      },
+      "id": "453187e7-53bc-4f4d-9299-d50b5ef5e3b0",
+      "name": "Resolve Channels",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        1328
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst toList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst digitsOf = v => String(v ?? '').replace(/\\D/g, '');\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\nconst safeAll = name => { try { return $(name).all().map(i => i.json); } catch (e) { return []; } };\n\n// Unique email domains that need an MX lookup\nconst items = $input.all().map(i => i.json);\nconst set = new Set();\nfor (const it of items) {\n  if (it.channel === 'gmail' && it.email_valid && it.email) set.add(it.email.split('@')[1]);\n}\nconst list = [...set];\nif (!list.length) list.push('gmail.com');\nreturn list.map(domain => ({ json: { domain } }));\n"
+      },
+      "id": "e709da5f-6b95-40c0-abd8-0d8ec14746bf",
+      "name": "Collect Email Domains",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        1328
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "f627ae14-3831-4fb8-9ddf-1329fdd985ee",
+              "leftValue": "={{ $('Validate Configuration').first().json.check_mx_record }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b2b6f280-e783-4da2-93ed-63cc24c750e1",
+      "name": "MX Check Enabled?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        928,
+        1328
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://dns.google/resolve?name=' + $json.domain + '&type=MX' }}",
+        "options": {}
+      },
+      "id": "b352ec9d-c0e1-4ffa-91c2-ce1f07ae0724",
+      "name": "MX Lookup",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1216,
+        1312
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst toList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst digitsOf = v => String(v ?? '').replace(/\\D/g, '');\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\nconst safeAll = name => { try { return $(name).all().map(i => i.json); } catch (e) { return []; } };\n\n// Unique document IDs whose size and type must be checked\nconst items = safeAll('Resolve Channels');\nconst set = new Set(items.filter(i => i.send_document && i.document_id).map(i => i.document_id));\nif (!set.size) return [{ json: { needed: false } }];\nreturn [...set].map(doc_id => ({ json: { needed: true, doc_id } }));\n"
+      },
+      "id": "7de71013-7021-47be-b65f-aee7d577059d",
+      "name": "Collect Document IDs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        1520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "092c68db-69bd-4641-acc9-2e7fc81c7d24",
+              "leftValue": "={{ $json.needed }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "72a18a9a-b0ad-40f8-917a-2c4573ea4072",
+      "name": "Documents Needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1696,
+        1520
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/' + $json.doc_id + '?fields=id,name,size,mimeType&supportsAllDrives=true' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {}
+      },
+      "id": "0624bc4f-adc8-4a73-8c65-533e9d9cb9b6",
+      "name": "Get Document Metadata",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1952,
+        1504
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst toList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst digitsOf = v => String(v ?? '').replace(/\\D/g, '');\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\nconst safeAll = name => { try { return $(name).all().map(i => i.json); } catch (e) { return []; } };\n\n// ==========================================\n// PRE-SEND VALIDATION (11 checks) + UNIFIED DUPLICATE CHECK\n// ==========================================\nconst cfg = $('Validate Configuration').first().json;\nconst defDial = String(cfg.default_country_code || '+92').replace('+', '');\nconst items = $('Resolve Channels').all().map(i => i.json).filter(i => i && !i._empty);\n\nconst blocklist = safeAll('Read Blocklist');\nconst log = safeAll('Read Send Log');\nconst gsent = safeAll('Search Gmail Sent');\nconst mxRows = safeAll('MX Lookup');\nconst docRows = safeAll('Get Document Metadata');\n\nconst toKey = v => {\n  let d = digitsOf(v).replace(/^00/, '');\n  if (!d) return '';\n  if (d.startsWith('0')) d = defDial + d.slice(1);\n  else if (d.length === 10) d = defDial + d;\n  return d;\n};\nconst sentLike = s => /^(sent|delivered|read)/i.test(String(s ?? '').trim());\nconst today = String(cfg.started_at).slice(0, 10);\nconst nowMs = Date.parse(cfg.started_at);\n\n// blocklist\nconst blockEmails = new Set(), blockMobiles = new Set();\nfor (const r of blocklist) {\n  const g = getter(r);\n  const e = String(g('Email')).trim().toLowerCase();\n  const m = toKey(g('Mobile', 'Phone'));\n  if (e) blockEmails.add(e);\n  if (m) blockMobiles.add(m);\n}\n\n// send log: already sent per package + channel + identity, and per package across channels\nconst sentSet = new Set();\nconst crossSent = new Map();\nconst sentToday = { gmail: 0, whatsapp: 0 };\nfor (const r of log) {\n  const g = getter(r);\n  if (!sentLike(g('Status'))) continue;\n  const ch = String(g('Channel')).trim().toLowerCase();\n  const pkg = String(g('Package')).trim();\n  const email = String(g('Email')).trim().toLowerCase();\n  const mob = toKey(g('Mobile'));\n  const ident = ch === 'gmail' ? email : mob;\n  if (ident) sentSet.add(`${pkg}|${ch}|${ident}`);\n  for (const id of [email, mob].filter(Boolean)) {\n    const k = `${pkg}|${id}`;\n    if (!crossSent.has(k)) crossSent.set(k, new Set());\n    crossSent.get(k).add(ch);\n  }\n  if (String(g('Timestamp')).slice(0, 10) === today && sentToday[ch] !== undefined) sentToday[ch]++;\n}\n\n// recipients found in Gmail Sent mail that contain the Admin's check text\nconst gmailSentTo = new Set();\nfor (const r of gsent) {\n  let to = r.To || r.to || '';\n  const headers = r.payload?.headers;\n  if (!to && Array.isArray(headers)) to = (headers.find(h => String(h.name).toLowerCase() === 'to') || {}).value || '';\n  for (const m of String(to).toLowerCase().match(/[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}/g) || []) gmailSentTo.add(m);\n}\n\n// MX results\nconst mxMap = new Map();\nfor (const r of mxRows) {\n  const name = String(r.Question?.[0]?.name || '').replace(/\\.$/, '').toLowerCase();\n  if (!name) continue;\n  mxMap.set(name, r.Status === 0 && (r.Answer || []).some(a => a.type === 15));\n}\n// document metadata\nconst docMap = new Map();\nfor (const r of docRows) { if (r.id) docMap.set(r.id, r); }\n\nconst remaining = {\n  gmail: Math.max(0, cfg.gmail_per_day - sentToday.gmail),\n  whatsapp: Math.max(0, cfg.whatsapp_per_day - sentToday.whatsapp)\n};\nconst seen = new Set();\nconst out = [];\n\nfor (const it of items) {\n  let status = 'ready', reason = '';\n  const warnings = [];\n  const fail = (kind, msg) => { if (status === 'ready') { status = kind; reason = msg; } };\n  const ch = it.channel;\n  const ident = ch === 'gmail' ? it.email : toKey(it.mobile_clean);\n  let message_type = '', wa_payload = null, wa_doc_payload = null;\n  let send_document = !!it.send_document, document_name = '';\n\n  // 2. channel data valid\n  if (ch === 'gmail') {\n    if (!it.email_valid) fail('blocked', 'invalid or missing email');\n    else if (cfg.check_mx_record) {\n      const domain = it.email.split('@')[1];\n      if (mxMap.has(domain)) { if (!mxMap.get(domain)) fail('blocked', `no MX record for ${domain}`); }\n      else warnings.push('MX lookup unavailable');\n    }\n  } else {\n    if (!it.mobile_clean) fail('blocked', `no valid mobile number${it.number_reason ? ': ' + it.number_reason : ''}${it.mobile_raw ? ' (original: ' + it.mobile_raw + ')' : ''}`);\n    else if (it.number_status === 'Needs review') fail('blocked', `mobile needs review (${it.number_reason})`);\n    if (it.mobile_conflict) warnings.push(`number is also used in row(s) ${it.conflict_rows.join(', ')}`);\n  }\n  // 3. opt-in\n  if (ch === 'whatsapp' && !it.wa_optin) fail('blocked', 'no WhatsApp opt-in');\n  // 4. requirement match: guaranteed by target selection / confirmed search result\n  // 5. not already sent\n  if (ident) {\n    if (sentSet.has(`${it.package}|${ch}|${ident}`)) fail('skipped', 'this package was already sent on this channel');\n    if (ch === 'gmail' && gmailSentTo.has(it.email)) fail('skipped', 'already found in Gmail Sent mail (check text)');\n    const other = crossSent.get(`${it.package}|${ident}`);\n    const otherPrefs = [...crossSent.entries()].filter(([k, v]) => k.startsWith(it.package + '|') && (k.endsWith('|' + (it.email || '~')) || k.endsWith('|' + (toKey(it.mobile_clean) || '~'))));\n    const crossChannels = new Set();\n    for (const [, v] of otherPrefs) for (const c of v) if (c !== ch) crossChannels.add(c);\n    if (crossChannels.size) warnings.push(`same package was already sent on ${[...crossChannels].join(', ')}`);\n  }\n  // 6. blocklist\n  if ((it.email && blockEmails.has(it.email)) || (it.mobile_clean && blockMobiles.has(toKey(it.mobile_clean)))) fail('blocked', 'on the blocklist / opted out');\n  // 7. duplicate row\n  if (ident) {\n    const dk = `${ch}|${ident}`;\n    if (seen.has(dk)) fail('blocked', 'duplicate row (same person listed twice)');\n    else if (status === 'ready') seen.add(dk);\n  }\n  // 8. message complete\n  if (it.missing_fields && it.missing_fields.length) fail('blocked', `message incomplete (missing: ${it.missing_fields.join(', ')})`);\n  if (ch === 'gmail' && (!it.gmail_subject || !it.gmail_body)) fail('blocked', 'Gmail subject or body is empty');\n  if (ch === 'whatsapp' && !it.wa_text && !it.wa_template_name) fail('blocked', 'WhatsApp text and template are both empty');\n  // 9. WhatsApp template / 24h window\n  let windowOpen = false;\n  if (ch === 'whatsapp') {\n    const li = Date.parse(it.last_inbound);\n    windowOpen = Number.isFinite(li) && nowMs - li < 24 * 3600 * 1000;\n  }\n  // 10. document valid\n  if (send_document) {\n    const meta = docMap.get(it.document_id);\n    let problem = '';\n    if (!meta || meta.error) problem = 'document not found or no access';\n    else {\n      document_name = meta.name || '';\n      const mb = meta.size ? Number(meta.size) / 1048576 : 0;\n      if (String(meta.mimeType || '').startsWith('application/vnd.google-apps')) problem = 'Google-native file (upload it as PDF/DOCX)';\n      else if (ch === 'gmail' && mb > cfg.gmail_max_mb) problem = `document is ${mb.toFixed(1)} MB (Gmail limit ${cfg.gmail_max_mb} MB)`;\n      else if (ch === 'whatsapp' && mb > cfg.wa_doc_max_mb) problem = `document is ${mb.toFixed(1)} MB (WhatsApp limit ${cfg.wa_doc_max_mb} MB)`;\n      else if (ch === 'whatsapp' && !windowOpen) problem = 'WhatsApp documents can only be sent inside the 24-hour reply window';\n    }\n    if (problem) {\n      if (cfg.on_document_problem === 'skip_person') fail('blocked', problem);\n      else { send_document = false; warnings.push(`document skipped: ${problem}`); }\n    }\n  }\n  // WhatsApp message type and payloads\n  if (ch === 'whatsapp' && status === 'ready') {\n    const to = String(it.mobile_clean).replace(/^\\+/, '');\n    if (send_document) {\n      message_type = 'document';\n      wa_doc_payload = { messaging_product: 'whatsapp', to, type: 'document', document: { id: '', filename: document_name || 'document', ...(it.wa_text ? { caption: it.wa_text } : {}) } };\n    } else if (windowOpen && it.wa_text) {\n      message_type = 'text';\n      wa_payload = { messaging_product: 'whatsapp', to, type: 'text', text: { body: it.wa_text, preview_url: true } };\n    } else if (it.wa_template_name) {\n      message_type = 'template';\n      wa_payload = { messaging_product: 'whatsapp', to, type: 'template', template: { name: it.wa_template_name, language: { code: it.wa_template_lang || 'en' } } };\n      if ((it.wa_template_params || []).length) {\n        wa_payload.template.components = [{ type: 'body', parameters: it.wa_template_params.map(t => ({ type: 'text', text: t })) }];\n      }\n    } else {\n      fail('blocked', 'outside the 24-hour window and no approved template is set');\n    }\n  }\n  // 11. limits\n  if (status === 'ready') {\n    if (remaining[ch] > 0) remaining[ch]--;\n    else fail('blocked', `daily limit reached for ${ch}`);\n  }\n\n  out.push({ json: {\n    row_number: it.row_number, person_key: it.person_key, name: it.name, email: it.email,\n    mobile_clean: it.mobile_clean, mobile_raw: it.mobile_raw, number_status: it.number_status, number_reason: it.number_reason,\n    position: it.position, city: it.city, category: it.category, package: it.package, channel: ch,\n    status, reason, warnings, message_type,\n    gmail_subject: it.gmail_subject, gmail_body: it.gmail_body, wa_payload, wa_doc_payload,\n    send_document: send_document && status === 'ready', document_id: send_document ? it.document_id : '', document_name,\n    run_id: cfg.run_id,\n    existing_gmail_status: it.existing_gmail_status, existing_wa_status: it.existing_wa_status, existing_last_contacted: it.existing_last_contacted,\n    total_targeted: it.total_targeted, truncated_count: it.truncated_count, not_found: it.not_found || []\n  } });\n}\nreturn out.length ? out : [{ json: { _empty: true } }];\n"
+      },
+      "id": "f9cb0e08-3785-443c-a021-d5b84727caaf",
+      "name": "Validate & Duplicate Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2160,
+        1728
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst toList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst digitsOf = v => String(v ?? '').replace(/\\D/g, '');\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\nconst safeAll = name => { try { return $(name).all().map(i => i.json); } catch (e) { return []; } };\n\n// ==========================================\n// DRY-RUN REPORT (who gets what, on which channel)\n// ==========================================\nconst cfg = $('Validate Configuration').first().json;\nconst all = $input.all().map(i => i.json).filter(i => !i._empty);\nconst ready = all.filter(i => i.status === 'ready');\nconst skipped = all.filter(i => i.status === 'skipped');\nconst blocked = all.filter(i => i.status === 'blocked');\nconst by = (arr, ch) => arr.filter(i => i.channel === ch).length;\nconst first = all[0] || {};\nconst notFound = first.not_found || [];\nconst strictViolation = cfg.strict_mode && blocked.length > 0;\nconst send_blocked = cfg.dry_run || strictViolation || ready.length === 0;\nlet block_reason = '';\nif (cfg.dry_run) block_reason = 'Dry-run mode is ON, so nothing will be sent. Set dry_run = false to send.';\nelse if (strictViolation) block_reason = 'Strict mode is ON and at least one person failed validation, so NOTHING is sent.';\nelse if (ready.length === 0) block_reason = 'Nobody is ready to receive a message.';\n\nconst trunc = n => n > 25 ? `<p>… and ${n - 25} more.</p>` : '';\nconst readyRows = ready.slice(0, 25).map(i => `<tr><td>${i.row_number}</td><td>${esc(i.name)}</td><td>${i.channel}</td>\n<td>${esc(i.channel === 'gmail' ? i.email : i.mobile_clean)}</td><td>${i.message_type || 'email'}</td><td>${esc(i.document_name || (i.send_document ? 'document' : '-'))}</td>\n<td>${esc((i.warnings || []).join('; '))}</td></tr>`).join('');\nconst sk = skipped.slice(0, 25).map(i => `<tr><td>${i.row_number}</td><td>${esc(i.name)}</td><td>${i.channel}</td><td>${esc(i.reason)}</td></tr>`).join('');\nconst bl = blocked.slice(0, 25).map(i => `<tr><td>${i.row_number}</td><td>${esc(i.name)}</td><td>${i.channel}</td><td>${esc(i.reason)}</td></tr>`).join('');\n\nconst html = `<h3>${cfg.dry_run ? 'DRY RUN' : 'Send plan'} ${esc(cfg.run_id)}</h3>\n<p><b>Channel:</b> ${esc(cfg.channel)} &nbsp; <b>Target:</b> ${esc(cfg.target_type)} &nbsp; <b>Package:</b> ${esc(cfg.package)} &nbsp; <b>Documents:</b> ${esc(cfg.attachment_mode)}</p>\n<p><b>Ready:</b> ${ready.length} (Gmail ${by(ready, 'gmail')}, WhatsApp ${by(ready, 'whatsapp')}) &nbsp;\n<b>Skipped:</b> ${skipped.length} &nbsp; <b>Blocked:</b> ${blocked.length}\n${first.truncated_count ? `<br><b>Note:</b> ${first.truncated_count} more people matched but max_per_run (${cfg.max_per_run}) was applied.` : ''}</p>\n${block_reason ? `<p style=\"color:#b00\"><b>${esc(block_reason)}</b></p>` : '<p>Nothing is sent until you approve.</p>'}\n<h4>Ready to send</h4><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Row</th><th>Name</th><th>Channel</th><th>To</th><th>Type</th><th>Document</th><th>Warnings</th></tr>${readyRows}</table>${trunc(ready.length)}\n${skipped.length ? `<h4>Skipped (already sent)</h4><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Row</th><th>Name</th><th>Channel</th><th>Reason</th></tr>${sk}</table>${trunc(skipped.length)}` : ''}\n${blocked.length ? `<h4>Blocked</h4><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Row</th><th>Name</th><th>Channel</th><th>Reason</th></tr>${bl}</table>${trunc(blocked.length)}` : ''}\n${notFound.length ? `<h4>Not found</h4><ul>${notFound.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}`;\n\nreturn [{ json: {\n  html, send_blocked, block_reason,\n  subject: `${cfg.dry_run ? '[DRY RUN] ' : ''}${ready.length} ready, ${skipped.length} skipped, ${blocked.length} blocked (${cfg.run_id})`,\n  ready: ready.length, skipped: skipped.length, blocked: blocked.length\n} }];\n"
+      },
+      "id": "6a3b25d7-2919-48df-9802-8992373d1d6d",
+      "name": "Build Dry Run Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        1952
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7ce00086-fc26-438c-8574-415df9dba8c0",
+              "leftValue": "={{ $json.send_blocked }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7b0bd972-75c1-438f-affe-195500e7dd9e",
+      "name": "Send Blocked?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        512,
+        1952
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Validate Configuration').first().json.adminEmail }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "6a8788f4-49c8-4334-9746-3455162eb5a4",
+      "name": "Email Preview Report",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        784,
+        1936
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "3204ab77-0eaa-4641-9d9f-ba4c74c8f2f9",
+              "leftValue": "={{ $('Validate Configuration').first().json.require_admin_approval }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "76bc9399-35a5-4bf8-9167-6c4c81258a44",
+      "name": "Approval Required?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        2192
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "={{ $('Validate Configuration').first().json.adminEmail }}",
+        "subject": "={{ 'Approval needed: ' + $('Build Dry Run Report').first().json.subject }}",
+        "message": "={{ $('Build Dry Run Report').first().json.html }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Approve & Send",
+            "disapproveLabel": "Reject"
+          }
+        },
+        "options": {}
+      },
+      "id": "60afbd0d-7d22-41d6-af1c-4c3b74228a40",
+      "name": "Email Approval Request",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1056,
+        2176
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "76e0a973-aebb-4590-b49b-f57e25835354",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a10134ba-3dd0-4e6b-a006-d1b5594dcdd6",
+      "name": "Approved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1312,
+        2176
+      ]
+    },
+    {
+      "parameters": {
+        "errorMessage": "The Admin rejected this run. No messages were sent."
+      },
+      "id": "67603304-4a9c-430c-9477-5c2611a5ca95",
+      "name": "Rejected - Stop Run",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        2400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Restore Ready Messages - position rehydrate fix\n// IMPORTANT: Run the workflow from the beginning after updating the Contacts sheet.\n// This node does not send blocked records unless the message is complete.\n\nvar validated = $('Validate & Duplicate Check')\n  .all()\n  .map(function (item) { return item.json; })\n  .filter(function (item) { return item && !item._empty; });\n\nvar messageRows = $('Resolve Package & Messages')\n  .all()\n  .map(function (item) { return item.json; })\n  .filter(function (item) { return item && !item._empty; });\n\nvar targetRows = $('Select Targets')\n  .all()\n  .map(function (item) { return item.json; })\n  .filter(function (item) { return item && !item._empty; });\n\nfunction text(value) {\n  return String(value === undefined || value === null ? '' : value).trim();\n}\n\nfunction key(value) {\n  return text(value).toLowerCase().replace(/[^a-z0-9]/g, '');\n}\n\nfunction field(row, names) {\n  var wanted = names.map(key);\n  var headers = Object.keys(row || {});\n\n  for (var i = 0; i < headers.length; i++) {\n    if (wanted.indexOf(key(headers[i])) !== -1) {\n      var value = row[headers[i]];\n      if (text(value) !== '') return value;\n    }\n  }\n  return '';\n}\n\nfunction samePerson(a, b) {\n  var aRow = text(field(a, ['row_number', 'Row Number', 'Row ID', 'row']));\n  var bRow = text(field(b, ['row_number', 'Row Number', 'Row ID', 'row']));\n  if (aRow && bRow && aRow === bRow) return true;\n\n  var aEmail = text(field(a, ['email', 'Email'])).toLowerCase();\n  var bEmail = text(field(b, ['email', 'Email'])).toLowerCase();\n  if (aEmail && bEmail && aEmail === bEmail) return true;\n\n  return false;\n}\n\nfunction findSource(row, rows) {\n  for (var i = 0; i < rows.length; i++) {\n    if (samePerson(row, rows[i])) return rows[i];\n  }\n  return {};\n}\n\nvar output = [];\nvar diagnostics = [];\n\nfor (var i = 0; i < validated.length; i++) {\n  var item = validated[i];\n  var status = text(item.status).toLowerCase();\n\n  if (status === 'ready') {\n    output.push({\n      json: Object.assign({}, item, {\n        status: 'ready',\n        restored_after_approval: true\n      })\n    });\n    continue;\n  }\n\n  var reason = text(item.reason).toLowerCase();\n  var source = findSource(item, messageRows);\n  if (!source || !Object.keys(source).length) {\n    source = findSource(item, targetRows);\n  }\n\n  var position = text(\n    field(item, ['position', 'Position', 'Job Position', 'Job Title', 'Role', 'Title']) ||\n    field(source, ['position', 'Position', 'Job Position', 'Job Title', 'Role', 'Title'])\n  );\n\n  var missing = item.missing_fields;\n  if (!Array.isArray(missing)) missing = [];\n\n  var newMissing = missing.filter(function (name) {\n    return key(name) !== 'position';\n  });\n\n  var subject = text(item.gmail_subject) || text(source.gmail_subject);\n  var body = text(item.gmail_body) || text(source.gmail_body);\n  var waText = text(item.wa_text) || text(source.wa_text);\n  var waTemplate = text(item.wa_template_name) || text(source.wa_template_name);\n  var channel = text(item.channel || source.channel).toLowerCase();\n  var messageComplete = channel === 'gmail'\n    ? Boolean(subject && body)\n    : Boolean(waText || waTemplate);\n\n  if (reason.indexOf('message incomplete') !== -1 && position && newMissing.length === 0 && messageComplete) {\n    var fixed = Object.assign({}, item, source, {\n      position: position,\n      gmail_subject: subject,\n      gmail_body: body,\n      wa_text: waText,\n      wa_template_name: waTemplate,\n      missing_fields: [],\n      status: 'ready',\n      reason: '',\n      restored_after_approval: true,\n      position_rehydrated: true\n    });\n    output.push({ json: fixed });\n  } else {\n    diagnostics.push({\n      row_number: item.row_number,\n      name: item.name,\n      status: item.status,\n      reason: item.reason,\n      position_found: position,\n      missing_fields: missing,\n      message_complete: messageComplete,\n      hint: position\n        ? 'Position found, but message fields are still incomplete. Run workflow from the beginning.'\n        : 'Position was not found in upstream nodes. Check the Contacts header/value and rerun from the start.'\n    });\n  }\n}\n\nif (output.length) return output;\n\nreturn [{\n  json: {\n    _empty: true,\n    target_found: false,\n    restore_error: 'No complete ready message could be restored.',\n    diagnostics: diagnostics,\n    hint: 'After editing the Contacts sheet, execute the workflow from Admin Start. Do not execute only this node.'\n  }\n}];\n"
+      },
+      "id": "7b47ed8e-84c0-463c-8347-a018f716b76e",
+      "name": "Restore Ready Messages",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1632,
+        2208
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "80bdfd84-d172-43e9-bfe2-1a1a42a55e66",
+      "name": "Loop Over Messages",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        240,
+        2464
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Read the Admin run-control sheet (RUN / PAUSE / STOP) and attach the state to the current message\nconst rows = $input.all().map(i => i.json);\nconst st = String(rows[0]?.Status ?? rows[0]?.status ?? 'RUN').trim().toUpperCase();\nconst loopItem = $('Loop Over Messages').first().json;\nreturn [{ json: { ...loopItem, run_state: ['PAUSE', 'STOP'].includes(st) ? st : 'RUN' } }];\n"
+      },
+      "id": "6aca53fb-19a4-4750-8d27-bc5e99d9b7e3",
+      "name": "Evaluate Run State",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        704,
+        2480
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "10b0f333-602e-4799-a6be-55cb752735d7",
+                    "leftValue": "={{ $json.run_state }}",
+                    "rightValue": "RUN",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "RUN"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "00dd9fc3-7f19-4a28-ae6c-8c94ca30be06",
+                    "leftValue": "={{ $json.run_state }}",
+                    "rightValue": "PAUSE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PAUSE"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "ddbf6ca0-308b-4c0e-9b1c-ff94e8f20390",
+                    "leftValue": "={{ $json.run_state }}",
+                    "rightValue": "STOP",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "STOP"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8f1c00b5-a5bc-4332-a8b5-2e7c06860d18",
+      "name": "Run State?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1008,
+        2464
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 60
+      },
+      "id": "fe7a3e5c-1272-4ed1-9fc7-de20d6692e69",
+      "name": "Pause Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1392,
+        2704
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "95cb0b2f-6857-4196-992e-72626b328846",
+              "name": "row_number",
+              "value": "={{ $('Evaluate Run State').first().json.row_number }}",
+              "type": "number"
+            },
+            {
+              "id": "d47c3ef8-d4cc-4da7-824f-3270bde789eb",
+              "name": "person_key",
+              "value": "={{ $('Evaluate Run State').first().json.person_key }}",
+              "type": "string"
+            },
+            {
+              "id": "aeba4219-12bc-485d-9bfe-cef82400a4fe",
+              "name": "name",
+              "value": "={{ $('Evaluate Run State').first().json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "313ef580-aa32-46ba-b36c-98fddfca77f9",
+              "name": "email",
+              "value": "={{ $('Evaluate Run State').first().json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "3bc8fda0-8671-4859-9ac3-f0e7d8ea7be3",
+              "name": "mobile_clean",
+              "value": "={{ $('Evaluate Run State').first().json.mobile_clean }}",
+              "type": "string"
+            },
+            {
+              "id": "88aa9fca-8b83-4927-ac37-8081ca73235e",
+              "name": "channel",
+              "value": "={{ $('Evaluate Run State').first().json.channel }}",
+              "type": "string"
+            },
+            {
+              "id": "78a0cdad-7d2c-4afb-9402-c26098d89472",
+              "name": "package",
+              "value": "={{ $('Evaluate Run State').first().json.package }}",
+              "type": "string"
+            },
+            {
+              "id": "8adca2ac-19f0-4be0-acb4-f51c885f4850",
+              "name": "run_id",
+              "value": "={{ $('Evaluate Run State').first().json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "0c245b7f-7437-45f9-8a9e-99148e460c11",
+              "name": "send_status",
+              "value": "Skipped",
+              "type": "string"
+            },
+            {
+              "id": "228b0f2d-f68d-4999-b8c3-b8ceed796955",
+              "name": "reason",
+              "value": "Run stopped by the Admin",
+              "type": "string"
+            },
+            {
+              "id": "47cc2a37-bf1d-4261-b345-878c1acdf0cf",
+              "name": "message_id",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "ab8d2ec3-a61b-4413-9840-103c1c8dfbca",
+              "name": "sent_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c69cd6e8-f2f9-40a7-a4c4-5f2545bcd0e7",
+      "name": "Mark Stopped",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1136,
+        2736
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "2a6e0e6e-123e-4316-bdf6-d9d60794a112",
+                    "leftValue": "={{ $json.channel }}",
+                    "rightValue": "gmail",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "gmail"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "1682db94-acac-47b1-8bd3-9d36d92fcbbd",
+                    "leftValue": "={{ $json.channel }}",
+                    "rightValue": "whatsapp",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "whatsapp"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2acade68-c455-4e8a-bab6-a07d0a8a6b0a",
+      "name": "Channel Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1360,
+        2464
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "804c0660-f34f-4da0-9746-98eda709d6c1",
+              "leftValue": "={{ $json.send_document }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c5b5b2a0-d743-4187-ac65-35d24fd0e608",
+      "name": "Gmail Has Document?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1808,
+        2624
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.document_id }}"
+        },
+        "options": {}
+      },
+      "id": "f5f991de-2cad-41d9-9b7d-58c17474a353",
+      "name": "Download Document (Gmail)",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2176,
+        2608
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Evaluate Run State').first().json.email }}",
+        "subject": "={{ $('Evaluate Run State').first().json.gmail_subject }}",
+        "message": "={{ $('Evaluate Run State').first().json.gmail_body }}",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "id": "b1917cc9-f0ff-430a-adc0-f1f95515dad0",
+      "name": "Send Gmail With Document",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2544,
+        2592
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Evaluate Run State').first().json.email }}",
+        "subject": "={{ $('Evaluate Run State').first().json.gmail_subject }}",
+        "message": "={{ $('Evaluate Run State').first().json.gmail_body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "33b3df6c-a904-473a-8e36-923e2ed14f5f",
+      "name": "Send Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2048,
+        2880
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "ad5c3b1d-6713-4231-96c5-5fb5606bed5a",
+              "leftValue": "={{ $json.message_type === 'document' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3abe683d-0ffd-4038-baa7-8d3daef075b1",
+      "name": "WhatsApp Has Document?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1728,
+        3104
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.document_id }}"
+        },
+        "options": {}
+      },
+      "id": "23afbc78-7d0a-4c31-93d2-a3007d53bd54",
+      "name": "Download Document (WhatsApp)",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2000,
+        3088
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://graph.facebook.com/' + $('Validate Configuration').first().json.wa_api_version + '/' + $('Validate Configuration').first().json.wa_phone_number_id + '/media' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "messaging_product",
+              "value": "whatsapp"
+            },
+            {
+              "name": "type",
+              "value": "={{ $binary.data.mimeType }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1369f531-9c9a-4bb6-943e-ec57c6ee1950",
+      "name": "Upload WhatsApp Media",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2272,
+        3072
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://graph.facebook.com/' + $('Validate Configuration').first().json.wa_api_version + '/' + $('Validate Configuration').first().json.wa_phone_number_id + '/messages' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ (() => { const p = JSON.parse(JSON.stringify($('Evaluate Run State').first().json.wa_doc_payload)); p.document.id = $json.id; return JSON.stringify(p); })() }}",
+        "options": {}
+      },
+      "id": "8d43b23c-719f-47aa-823d-20960b6d0d9e",
+      "name": "Send WhatsApp Document",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2560,
+        3056
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://graph.facebook.com/' + $('Validate Configuration').first().json.wa_api_version + '/' + $('Validate Configuration').first().json.wa_phone_number_id + '/messages' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Evaluate Run State').first().json.wa_payload) }}",
+        "options": {}
+      },
+      "id": "d869a368-0dac-4225-9e04-cb17a272e5ac",
+      "name": "Send WhatsApp Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2464,
+        3344
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1f2c1a3-b2f0-4c77-9914-94966e0d5c45",
+              "name": "row_number",
+              "value": "={{ $('Evaluate Run State').first().json.row_number }}",
+              "type": "number"
+            },
+            {
+              "id": "ecb0b1e0-1f28-4c06-8635-8bb598c7c8d3",
+              "name": "person_key",
+              "value": "={{ $('Evaluate Run State').first().json.person_key }}",
+              "type": "string"
+            },
+            {
+              "id": "336d6fba-fde2-4055-a136-330fb9513a65",
+              "name": "name",
+              "value": "={{ $('Evaluate Run State').first().json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "4f2cbd91-d3a8-4e14-85b7-985a90a347ff",
+              "name": "email",
+              "value": "={{ $('Evaluate Run State').first().json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "aa1a4ec4-2106-4c97-983d-88a0398de46d",
+              "name": "mobile_clean",
+              "value": "={{ $('Evaluate Run State').first().json.mobile_clean }}",
+              "type": "string"
+            },
+            {
+              "id": "c51cbd25-e5fc-4f03-b732-36bbc5eaeeb9",
+              "name": "channel",
+              "value": "={{ $('Evaluate Run State').first().json.channel }}",
+              "type": "string"
+            },
+            {
+              "id": "bce45450-96ba-422a-9a39-edec5f79b1cd",
+              "name": "package",
+              "value": "={{ $('Evaluate Run State').first().json.package }}",
+              "type": "string"
+            },
+            {
+              "id": "c7da1a87-603e-4e64-a62d-5fc2ac260d31",
+              "name": "run_id",
+              "value": "={{ $('Evaluate Run State').first().json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "62c32ff2-b85d-4af6-b716-24e82ba34f3f",
+              "name": "send_status",
+              "value": "Sent",
+              "type": "string"
+            },
+            {
+              "id": "4306f393-d14f-4dc5-a997-ee817792b65e",
+              "name": "reason",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "1afc9e28-440b-4c4c-aaa1-f4aeb5f81f84",
+              "name": "message_id",
+              "value": "={{ $json.messages?.[0]?.id || $json.id || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "3d4f4bec-b41d-461e-8b33-92d416e89ee7",
+              "name": "sent_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cc558624-8c42-4c15-be68-5aecd9bf58f6",
+      "name": "Mark Sent",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2464,
+        2864
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8bf3e175-8755-44d6-84db-975f95ccc04f",
+              "name": "row_number",
+              "value": "={{ $('Evaluate Run State').first().json.row_number }}",
+              "type": "number"
+            },
+            {
+              "id": "860ca6b0-492b-48e3-92b1-04c7dcce4c44",
+              "name": "person_key",
+              "value": "={{ $('Evaluate Run State').first().json.person_key }}",
+              "type": "string"
+            },
+            {
+              "id": "b3825ffc-753c-4b57-8864-c7fc031fce97",
+              "name": "name",
+              "value": "={{ $('Evaluate Run State').first().json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "29a869b1-149d-4ce4-94ad-f87e8b388c1e",
+              "name": "email",
+              "value": "={{ $('Evaluate Run State').first().json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "5ec3e5ba-9bc8-4205-920c-40464133b508",
+              "name": "mobile_clean",
+              "value": "={{ $('Evaluate Run State').first().json.mobile_clean }}",
+              "type": "string"
+            },
+            {
+              "id": "351fa9a1-0d36-47e0-80a3-8addb638efcc",
+              "name": "channel",
+              "value": "={{ $('Evaluate Run State').first().json.channel }}",
+              "type": "string"
+            },
+            {
+              "id": "c90dec2e-252a-4aae-bdeb-4ff79734bf11",
+              "name": "package",
+              "value": "={{ $('Evaluate Run State').first().json.package }}",
+              "type": "string"
+            },
+            {
+              "id": "1c543c87-18aa-47b6-86e4-dd23a9655556",
+              "name": "run_id",
+              "value": "={{ $('Evaluate Run State').first().json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "965e6e44-f428-42fa-882c-76869d72a637",
+              "name": "send_status",
+              "value": "Failed",
+              "type": "string"
+            },
+            {
+              "id": "8a437e8f-6cbe-4de7-8b68-d93259ff6b72",
+              "name": "reason",
+              "value": "={{ (() => { const m = JSON.stringify($json.error || $json); return /131026|undeliverable|not a valid whatsapp/i.test(m) ? 'not reachable' : ($json.error?.message || 'Send failed'); })() }}",
+              "type": "string"
+            },
+            {
+              "id": "1f7c4f20-f50f-4734-bf1a-7dc0caa80cf5",
+              "name": "message_id",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "7d0ed0a7-99a1-43d7-9a24-17b3314e77fb",
+              "name": "sent_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bd76ee4c-89a7-47a1-9141-d6f892e6ce95",
+      "name": "Mark Failed",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3088,
+        3376
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ Math.floor(Math.random() * ($('Validate Configuration').first().json.delay_max - $('Validate Configuration').first().json.delay_min + 1)) + $('Validate Configuration').first().json.delay_min }}"
+      },
+      "id": "25b5eb92-bdba-4006-90f5-7eb4c32de150",
+      "name": "Delay Between Sends",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2992,
+        3088
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- shared helpers ----------\nconst normKey = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');\nconst lev = (a, b) => {\n  if (a === b) return 0;\n  const m = a.length, n = b.length;\n  if (!m) return n;\n  if (!n) return m;\n  let prev = Array.from({ length: n + 1 }, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    const cur = [i];\n    for (let j = 1; j <= n; j++) {\n      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));\n    }\n    prev = cur;\n  }\n  return prev[n];\n};\nconst sim = (a, b) => {\n  const na = normKey(a), nb = normKey(b);\n  if (!na || !nb) return 0;\n  if (na === nb) return 1;\n  if (Math.min(na.length, nb.length) >= 3 && (na.includes(nb) || nb.includes(na))) return 0.9;\n  return 1 - lev(na, nb) / Math.max(na.length, nb.length);\n};\nconst toList = v => Array.isArray(v)\n  ? v.map(x => String(x).trim()).filter(Boolean)\n  : String(v ?? '').split(/[,;\\n]+/).map(s => s.trim()).filter(Boolean);\nconst digitsOf = v => String(v ?? '').replace(/\\D/g, '');\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst getter = row => {\n  const map = {};\n  for (const k of Object.keys(row || {})) map[normKey(k)] = row[k];\n  return (...names) => {\n    for (const n of names) {\n      const v = map[normKey(n)];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return v;\n    }\n    return '';\n  };\n};\nconst safeAll = name => { try { return $(name).all().map(i => i.json); } catch (e) { return []; } };\n\n// ==========================================\n// FINALIZE: combine send results + skipped/blocked, build status rows, log rows and report\n// ==========================================\nconst cfg = $('Validate Configuration').first().json;\nconst results = $input.all().map(i => i.json).filter(r => r && r.channel);\nconst validated = safeAll('Validate & Duplicate Check').filter(v => v.channel);\nconst nonReady = validated.filter(v => v.status !== 'ready');\nconst nowIso = new Date().toISOString();\nconst today = nowIso.slice(0, 10);\n\nconst label = (r) => {\n  if (r.send_status === 'Sent') return 'Sent';\n  if (r.send_status === 'Failed') return r.reason ? `Failed: ${r.reason}` : 'Failed';\n  return r.reason ? `Skipped: ${r.reason}` : 'Skipped';\n};\nconst persons = new Map();\nconst seedPerson = v => {\n  if (!persons.has(v.row_number)) persons.set(v.row_number, {\n    row_number: v.row_number,\n    'Gmail Status': v.existing_gmail_status || '',\n    'WhatsApp Status': v.existing_wa_status || '',\n    'Last Contacted': v.existing_last_contacted || ''\n  });\n  return persons.get(v.row_number);\n};\nvalidated.forEach(seedPerson);\nconst setStatus = (rn, ch, text, sent) => {\n  const p = persons.get(rn);\n  if (!p) return;\n  p[ch === 'gmail' ? 'Gmail Status' : 'WhatsApp Status'] = text;\n  if (sent) p['Last Contacted'] = today;\n};\nfor (const r of results) setStatus(r.row_number, r.channel, label(r), r.send_status === 'Sent');\nfor (const v of nonReady) setStatus(v.row_number, v.channel, `${v.status === 'skipped' ? 'Skipped' : 'Blocked'}: ${v.reason}`, false);\n\nconst touched = new Set([...results.map(r => r.row_number), ...nonReady.map(v => v.row_number)]);\nconst out = [];\nfor (const rn of touched) out.push({ json: { _kind: 'status', ...persons.get(rn) } });\n\nconst logRow = (o) => ({ _kind: 'log', Timestamp: nowIso, 'Run ID': cfg.run_id, Event: '', Channel: '', Name: '', Email: '', Mobile: '', Package: cfg.package, Status: '', Reason: '', 'Message ID': '', ...o });\nfor (const v of nonReady) {\n  out.push({ json: logRow({ Event: v.status === 'skipped' ? 'skip' : 'blocked', Channel: v.channel, Name: v.name, Email: v.email, Mobile: v.mobile_clean, Status: v.status === 'skipped' ? 'Skipped' : 'Blocked', Reason: v.reason }) });\n}\nif (cfg.target_type === 'search') {\n  const matches = safeAll('Smart Search').filter(r => !r._empty);\n  out.push({ json: logRow({ Event: 'search', Status: `${matches.length} match(es)`, Reason: String(cfg.search_query || '').slice(0, 200) }) });\n}\nif (cfg.require_admin_approval) out.push({ json: logRow({ Event: 'approval', Status: 'Approved' }) });\n\nconst count = (s) => results.filter(r => r.send_status === s).length;\nconst sent = count('Sent'), failed = count('Failed');\nconst stopped = results.filter(r => r.send_status === 'Skipped').length;\nconst by = ch => results.filter(r => r.channel === ch && r.send_status === 'Sent').length;\nconst failList = results.filter(r => r.send_status === 'Failed').map(r => `<li>${esc(r.name)} (${r.channel}): ${esc(r.reason)}</li>`).join('');\nconst blockList = nonReady.slice(0, 25).map(v => `<li>${esc(v.name)} (${v.channel}): ${esc(v.status)}, ${esc(v.reason)}</li>`).join('');\nconst html = `<h3>Run ${esc(cfg.run_id)} finished</h3>\n<p><b>Sent:</b> ${sent} (Gmail ${by('gmail')}, WhatsApp ${by('whatsapp')})<br><b>Failed:</b> ${failed}<br>\n<b>Stopped by Admin:</b> ${stopped}<br><b>Skipped (already sent):</b> ${nonReady.filter(v => v.status === 'skipped').length}<br>\n<b>Blocked:</b> ${nonReady.filter(v => v.status === 'blocked').length}</p>\n${failed ? `<h4>Failures</h4><ul>${failList}</ul>` : ''}\n${nonReady.length ? `<h4>Skipped / blocked</h4><ul>${blockList}</ul>${nonReady.length > 25 ? '<p>… see the Send Log sheet for the rest.</p>' : ''}` : ''}\n<p>WhatsApp delivery updates (delivered / read) arrive later and are written to the sheet automatically.</p>`;\nout.push({ json: logRow({ Event: 'run', Status: `${sent} sent, ${failed} failed`, Reason: `skipped/blocked: ${nonReady.length}` }) });\nout.push({ json: { _kind: 'report', subject: `Run ${cfg.run_id} finished: ${sent} sent, ${failed} failed`, html } });\nreturn out;\n"
+      },
+      "id": "6e1e8cdf-b2d6-4d2f-96d3-7fb0fb525fc8",
+      "name": "Finalize Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        3360
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "bcdafb1b-d9f5-4b5b-aa3d-99fa39c075c9",
+                    "leftValue": "={{ $json._kind }}",
+                    "rightValue": "status",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "status"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "43f8953e-97ec-41de-8cc2-db34120986ed",
+                    "leftValue": "={{ $json._kind }}",
+                    "rightValue": "log",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "log"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "08803f0f-fefc-485f-ae22-6f88716b0c49",
+                    "leftValue": "={{ $json._kind }}",
+                    "rightValue": "report",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "report"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4a8c38f6-56a2-4e01-ac3e-af9f7d81080a",
+      "name": "Result Type?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        448,
+        3344
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Validate Configuration').first().json.adminEmail }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "741d3a8d-9dc2-4496-a178-132df6507aa2",
+      "name": "Email Final Report",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1056,
+        3392
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "portfolio-demo-webhook",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        528
+      ],
+      "id": "af7147f0-225a-4b26-b68b-f33b53873f36",
+      "name": "Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 297243962,
+          "mode": "list",
+          "cachedResultName": "mobile_clean",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $json.row_number }}",
+            "Mobile": "={{ $json.mobile_raw }}",
+            "Mobile Clean": "={{ $json.mobile_clean }}",
+            "Number Status": "={{ $json.number_status }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Mobile",
+              "displayName": "Mobile",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mobile Clean",
+              "displayName": "Mobile Clean",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Number Status",
+              "displayName": "Number Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1008,
+        864
+      ],
+      "id": "8ed62830-daf4-4c67-ba54-913484610a27",
+      "name": "Update row in sheet"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Contacts",
+          "cachedResultUrl": ""
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        864
+      ],
+      "id": "c320de7e-7439-469a-8cf4-c8102153ad45",
+      "name": "Contacts"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1889424380,
+          "mode": "list",
+          "cachedResultName": "Control",
+          "cachedResultUrl": ""
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        496,
+        2480
+      ],
+      "id": "1e16531f-636e-49ed-a5ea-3de651359fc2",
+      "name": "Read Run Control1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1175191147,
+          "mode": "list",
+          "cachedResultName": "Blocklist",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mobile",
+              "displayName": "Mobile",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reason",
+              "displayName": "Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Added At",
+              "displayName": "Added At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1632,
+        2416
+      ],
+      "id": "dad5ec9e-cf4c-4448-8a5f-1f531d9d106c",
+      "name": "Log Rejection"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1359502713,
+          "mode": "list",
+          "cachedResultName": "Send Log",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Run ID": "={{ $json.run_id }}",
+            "Channel": "={{ $json.channel }}",
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Mobile": "={{ $json.mobile_clean }}",
+            "Package": "={{ $json.package }}",
+            "Status": "={{ $json.send_status }}",
+            "Reason": "={{ $json.reason }}",
+            "Message ID": "={{ $json.message_id }}",
+            "Timestamp": "={{ $json.sent_at }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Run ID",
+              "displayName": "Run ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Event",
+              "displayName": "Event",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Channel",
+              "displayName": "Channel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mobile",
+              "displayName": "Mobile",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Package",
+              "displayName": "Package",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reason",
+              "displayName": "Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message ID",
+              "displayName": "Message ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2880,
+        2864
+      ],
+      "id": "b5219908-a188-458f-8a17-f8ab7b2c303b",
+      "name": "Log Send Event"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Contacts",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $json.row_number }}",
+            "Status": "={{ $json['Gmail Status'] }}",
+            "Last_Contacted": "={{ $json['Last Contacted'] }}",
+            "Contact_ID": "="
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Contact_ID",
+              "displayName": "Contact_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full_Name",
+              "displayName": "Full_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Preferred_Channel",
+              "displayName": "Preferred_Channel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email_Opt_In",
+              "displayName": "Email_Opt_In",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "WhatsApp_Opt_In",
+              "displayName": "WhatsApp_Opt_In",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Package_ID",
+              "displayName": "Package_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Position",
+              "displayName": "Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last_Contacted",
+              "displayName": "Last_Contacted",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        800,
+        3328
+      ],
+      "id": "ca185781-023c-48ea-ada7-823ba9e1a120",
+      "name": "Update Contact Statuses"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Admin Start": {
+      "main": [
+        []
+      ]
+    },
+    "Admin Configuration": {
+      "main": [
+        [
+          {
+            "node": "Validate Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Configuration": {
+      "main": [
+        [
+          {
+            "node": "Config Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config Valid?": {
+      "main": [
+        [
+          {
+            "node": "Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Config Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize & Clean Contacts": {
+      "main": [
+        [
+          {
+            "node": "Changed Rows Only",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Target Type Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Changed Rows Only": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Target Type Router": {
+      "main": [
+        [
+          {
+            "node": "Smart Search",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Select Targets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Smart Search": {
+      "main": [
+        [
+          {
+            "node": "Search Matches Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Matches Found?": {
+      "main": [
+        [
+          {
+            "node": "Build Match Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Match Notice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Match Email": {
+      "main": [
+        [
+          {
+            "node": "Admin Confirm Match",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Admin Confirm Match": {
+      "main": [
+        [
+          {
+            "node": "Apply Admin Pick",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apply Admin Pick": {
+      "main": [
+        [
+          {
+            "node": "Targets Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select Targets": {
+      "main": [
+        [
+          {
+            "node": "Targets Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Targets Found?": {
+      "main": [
+        [
+          {
+            "node": "Apply Max Recipients",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Targets Notice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apply Max Recipients": {
+      "main": [
+        [
+          {
+            "node": "Resolve Package & Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Package & Messages": {
+      "main": [
+        [
+          {
+            "node": "Resolve Channels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Channels": {
+      "main": [
+        [
+          {
+            "node": "Collect Email Domains",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Email Domains": {
+      "main": [
+        [
+          {
+            "node": "MX Check Enabled?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MX Check Enabled?": {
+      "main": [
+        [
+          {
+            "node": "MX Lookup",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Collect Document IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MX Lookup": {
+      "main": [
+        [
+          {
+            "node": "Collect Document IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Document IDs": {
+      "main": [
+        [
+          {
+            "node": "Documents Needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Documents Needed?": {
+      "main": [
+        [
+          {
+            "node": "Get Document Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validate & Duplicate Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Document Metadata": {
+      "main": [
+        [
+          {
+            "node": "Validate & Duplicate Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Duplicate Check": {
+      "main": [
+        [
+          {
+            "node": "Build Dry Run Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Dry Run Report": {
+      "main": [
+        [
+          {
+            "node": "Send Blocked?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Blocked?": {
+      "main": [
+        [
+          {
+            "node": "Email Preview Report",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Approval Required?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approval Required?": {
+      "main": [
+        [
+          {
+            "node": "Email Approval Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Restore Ready Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Approval Request": {
+      "main": [
+        [
+          {
+            "node": "Approved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved?": {
+      "main": [
+        [
+          {
+            "node": "Restore Ready Messages",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rejected - Stop Run",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Rejection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore Ready Messages": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Messages": {
+      "main": [
+        [
+          {
+            "node": "Finalize Results",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Run Control1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate Run State": {
+      "main": [
+        [
+          {
+            "node": "Run State?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run State?": {
+      "main": [
+        [
+          {
+            "node": "Channel Router",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pause Wait",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Stopped",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pause Wait": {
+      "main": [
+        [
+          {
+            "node": "Read Run Control1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Stopped": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Channel Router": {
+      "main": [
+        [
+          {
+            "node": "Gmail Has Document?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WhatsApp Has Document?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Has Document?": {
+      "main": [
+        [
+          {
+            "node": "Download Document (Gmail)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Document (Gmail)": {
+      "main": [
+        [
+          {
+            "node": "Send Gmail With Document",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Has Document?": {
+      "main": [
+        [
+          {
+            "node": "Download Document (WhatsApp)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send WhatsApp Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Document (WhatsApp)": {
+      "main": [
+        [
+          {
+            "node": "Upload WhatsApp Media",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload WhatsApp Media": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Document",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Gmail With Document": {
+      "main": [
+        [
+          {
+            "node": "Mark Sent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Gmail": {
+      "main": [
+        [
+          {
+            "node": "Mark Sent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp Document": {
+      "main": [
+        [
+          {
+            "node": "Mark Sent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp Message": {
+      "main": [
+        [
+          {
+            "node": "Mark Sent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Sent": {
+      "main": [
+        [
+          {
+            "node": "Delay Between Sends",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Send Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Failed": {
+      "main": [
+        [
+          {
+            "node": "Delay Between Sends",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delay Between Sends": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finalize Results": {
+      "main": [
+        [
+          {
+            "node": "Result Type?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Result Type?": {
+      "main": [
+        [
+          {
+            "node": "Update Contact Statuses",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "Email Final Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Admin Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contacts": {
+      "main": [
+        [
+          {
+            "node": "Normalize & Clean Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Run Control1": {
+      "main": [
+        [
+          {
+            "node": "Evaluate Run State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}

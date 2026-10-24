@@ -1,0 +1,191 @@
+{
+  "name": "Smart AI Welcome Email Response",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Customer ID ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Customer Name"
+            },
+            {
+              "fieldLabel": "Product Purchasing "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "212b3065-1f60-40bf-bf39-bcd7373c9986",
+      "name": "On form submission"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Customer Name ": "={{ $json['Customer Name'] }}",
+            "Purchaing Product": "={{ $json['Product Purchasing '] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Customer Name ",
+              "displayName": "Customer Name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Purchaing Product",
+              "displayName": "Purchaing Product",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "4d6b2823-83a8-4f42-8cad-2a75c2c71eee",
+      "name": "Append row in sheet"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Role You are an enthusiastic and welcoming AI Academic Assistant for an automation institute. Your job is to generate a highly personalized, warm, and motivational welcome message for a newly registered student.  # Name: {$json[' ']{  }} - Product:{{ $json['Purchaing Product'] }} {$json['']{  }} -   # Instructions 1. Write a short, engaging welcome and motivational message (exactly 2-3 sentences long). 2. Directly address the student by their name. 3. Compliment or mention something positive/special about their city to give it a personal touch. 4. Keep the tone inspiring, professional, and welcoming.  # Constraints - Do NOT include any subject lines, placeholders, greeting lines (like \"Dear Student\"), or signature block at the end. - Output ONLY the 2-3 sentences of the body message.  - Do not mention the word \"Constraints\" or \"Instructions\" in your output. {{ $json['Customer Name '] }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "="
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        416,
+        0
+      ],
+      "id": "c19b9331-4366-476b-a42e-09fccec96636",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "sendTo": "contact@example.com",
+        "subject": "Welcome ",
+        "message": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        768,
+        0
+      ],
+      "id": "1c089560-d900-4e20-8e8b-21070bf136bd",
+      "name": "Send a message"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        352,
+        208
+      ],
+      "id": "6ca4122d-0739-403a-9ba2-2ea9f2f2f20e",
+      "name": "Mistral Cloud Chat Model"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "nodeGroups": [],
+  "tags": []
+}

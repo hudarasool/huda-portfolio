@@ -1,0 +1,2065 @@
+{
+  "name": "AI Email Outreach Automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "9e2b68ea-cfd8-4067-8f22-f41150a0af1b",
+      "name": "Admin Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        48,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fcad4c01-fe43-49b7-98d4-9727862cd6f9",
+              "name": "run_id",
+              "value": "=={{ $execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "378470f2-15fc-4838-a3d6-21f6358137b6",
+              "name": "positions",
+              "value": "={{ $json.body.positions }}",
+              "type": "array"
+            },
+            {
+              "id": "0e25cf57-fd14-47a3-84c5-29e65542f78d",
+              "name": "selected_rows",
+              "value": "={{ $json.body.selection.rows }}",
+              "type": "array"
+            },
+            {
+              "id": "ebab0655-333f-4d49-85d8-9334b1e5d9d5",
+              "name": "subject",
+              "value": "={{ $json.body.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "bbe244c0-ac5b-4e4a-9073-eb21bc520634",
+              "name": "message_body",
+              "value": "={{ $json.body.message_body }}",
+              "type": "string"
+            },
+            {
+              "id": "da9e9eb0-b113-483a-a353-4e88ded705a6",
+              "name": "check_text",
+              "value": "={{ $json.body.check_text }}",
+              "type": "string"
+            },
+            {
+              "id": "8ee0a3ed-3535-4519-8a3b-2f59c205faa5",
+              "name": "attachment_mode",
+              "value": "={{ $json.body.attachment_mode }}",
+              "type": "string"
+            },
+            {
+              "id": "34fac2d6-c9c1-4075-914e-9399412095c5",
+              "name": "attachment_file_ids",
+              "value": "={{ $json.body.attachment_file_ids[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "0a7a0ca2-0c7d-46ef-bdcb-db8f1ecca83e",
+              "name": "files_per_email",
+              "value": "={{ $json.body.files_per_email }}",
+              "type": "number"
+            },
+            {
+              "id": "a932c19d-3e09-4bac-8cda-e13f3f249809",
+              "name": "strict_mode",
+              "value": "={{ $json.body.strict_mode }}",
+              "type": "boolean"
+            },
+            {
+              "id": "0faa335b-100a-4a30-8786-614cb19933e3",
+              "name": "dry_run",
+              "value": "={{ $json.body.dry_run }}",
+              "type": "boolean"
+            },
+            {
+              "id": "f5a39df9-a0c5-4ec2-91fa-f8dd2cf68331",
+              "name": "require_admin_approval",
+              "value": "={{ $json.body.require_admin_approval }}",
+              "type": "boolean"
+            },
+            {
+              "id": "0c8748e9-a4fa-40a9-9955-969f3e8dde2a",
+              "name": "max_per_run",
+              "value": "={{ $json.body.max_per_run }}",
+              "type": "number"
+            },
+            {
+              "id": "d0e480b7-a27e-4fd5-9ebe-bc8117e0486c",
+              "name": "max_per_day",
+              "value": "={{ $json.body.max_per_day }}",
+              "type": "number"
+            },
+            {
+              "id": "8c3340d3-d4ca-45e0-bdd1-95f24fbe3d38",
+              "name": "delay_min",
+              "value": "={{ $json.body.delay_min }}",
+              "type": "number"
+            },
+            {
+              "id": "827222b9-f78c-4d15-b6d8-92720e60cb2e",
+              "name": "delay_max",
+              "value": "={{ $json.body.delay_max }}",
+              "type": "number"
+            },
+            {
+              "id": "50a04966-133a-462e-9689-e23d6f500138",
+              "name": "adminEmail",
+              "value": "={{ $json.body?.adminEmail || $json.adminEmail || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "0bc351a0-b5c7-46da-a565-55a679cb2c94",
+              "name": "spreadsheetId",
+              "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fb7ffa65-ad1e-4c40-b211-9486aa877086",
+      "name": "Admin Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// GENERATE RUN ID + NORMALIZE CONFIGURATION\n// ==========================================\n\nconst input = $json;\n\n\n// ==========================================\n// READ POSSIBLE DATA SOURCES\n// ==========================================\n\n// Support both:\n// 1. Flattened fields\n// 2. Nested fields\n\nconst body = input.body || {};\n\nconst selection = input.selection || body.selection || {};\nconst message = input.message || body.message || {};\nconst attachments = input.attachments || body.attachments || {};\n\n\n// ==========================================\n// POSITIONS\n// ==========================================\n\nlet positions =\n  input.positions ??\n  body.positions ??\n  [];\n\nif (!Array.isArray(positions)) {\n  positions = [positions].filter(Boolean);\n}\n\n\n// ==========================================\n// SELECTION MODE\n// ==========================================\n\nlet selectedRows =\n  input.selected_rows ??\n  selection.rows ??\n  body.selected_rows ??\n  [];\n\nif (!Array.isArray(selectedRows)) {\n  selectedRows = [];\n}\n\n\n// If rows are selected → rows mode\n// Otherwise → positions mode\n\nlet selectionMode =\n  input.selection_mode ??\n  selection.mode ??\n  body.selection_mode ??\n  \"\";\n\nselectionMode = String(selectionMode).trim();\n\nif (!selectionMode) {\n  selectionMode =\n    selectedRows.length > 0\n      ? \"rows\"\n      : positions.length > 0\n        ? \"positions\"\n        : \"rows\";\n}\n\n\n// ==========================================\n// MESSAGE SUBJECT\n// ==========================================\n\nlet subject =\n  input.subject ??\n  input.message_subject ??\n  message.subject ??\n  body.subject ??\n  body.message_subject ??\n  \"\";\n\nsubject = String(subject).trim();\n\n\n// ==========================================\n// MESSAGE BODY\n// ==========================================\n\nlet messageBody =\n  input.message_body ??\n  input.messageBody ??\n  message.body ??\n  body.message_body ??\n  body.messageBody ??\n  \"\";\n\nmessageBody = String(messageBody).trim();\n\n\n// ==========================================\n// CHECK TEXT\n// ==========================================\n\nlet checkText =\n  input.check_text ??\n  body.check_text ??\n  \"\";\n\ncheckText = String(checkText).trim();\n\n\n// ==========================================\n// SAFE FALLBACK FOR SUBJECT\n// ==========================================\n\n// If Admin did not provide a separate subject,\n// use check_text as the subject.\n\nif (!subject && checkText) {\n  subject = checkText;\n}\n\n\n// ==========================================\n// SAFE FALLBACK FOR MESSAGE BODY\n// ==========================================\n\n// If Admin did not provide message body,\n// use a basic configured template.\n\nif (!messageBody) {\n  messageBody =\n`Hello {{name}},\n\nI am interested in the {{position}} opportunity.\n\nBest regards`;\n}\n\n\n// ==========================================\n// ATTACHMENTS\n// ==========================================\n\nlet attachmentMode =\n  input.attachment_mode ??\n  attachments.mode ??\n  body.attachment_mode ??\n  \"\";\n\nattachmentMode = String(attachmentMode).trim();\n\n\n// If no attachment mode is provided,\n// default to none.\n\nif (!attachmentMode) {\n  attachmentMode = \"none\";\n}\n\n\nlet attachmentFileIds =\n  input.attachment_file_ids ??\n  attachments.file_ids ??\n  body.attachment_file_ids ??\n  [];\n\nif (!Array.isArray(attachmentFileIds)) {\n  attachmentFileIds = [];\n}\n\n\n// ==========================================\n// FILES PER EMAIL\n// ==========================================\n\nlet filesPerEmail =\n  input.files_per_email ??\n  attachments.files_per_email ??\n  body.files_per_email ??\n  1;\n\nfilesPerEmail = Number(filesPerEmail);\n\nif (!Number.isFinite(filesPerEmail) || filesPerEmail < 1) {\n  filesPerEmail = 1;\n}\n\n\n// ==========================================\n// LIMITS\n// ==========================================\n\nlet maxPerRun = Number(\n  input.max_per_run ??\n  body.max_per_run ??\n  50\n);\n\nif (!Number.isFinite(maxPerRun) || maxPerRun < 1) {\n  maxPerRun = 50;\n}\n\n\nlet maxPerDay = Number(\n  input.max_per_day ??\n  body.max_per_day ??\n  100\n);\n\nif (!Number.isFinite(maxPerDay) || maxPerDay < 1) {\n  maxPerDay = 100;\n}\n\n\n// ==========================================\n// DELAY\n// ==========================================\n\nlet delayMin = Number(\n  input.delay_min ??\n  body.delay_min ??\n  30\n);\n\nif (!Number.isFinite(delayMin) || delayMin < 0) {\n  delayMin = 30;\n}\n\n\nlet delayMax = Number(\n  input.delay_max ??\n  body.delay_max ??\n  90\n);\n\nif (!Number.isFinite(delayMax) || delayMax < delayMin) {\n  delayMax = 90;\n}\n\n\n// ==========================================\n// BOOLEAN VALUES\n// ==========================================\n\nconst strictMode =\n  input.strict_mode === true ||\n  input.strict_mode === \"true\";\n\nconst dryRun =\n  input.dry_run === true ||\n  input.dry_run === \"true\";\n\nconst requireAdminApproval =\n  input.require_admin_approval === true ||\n  input.require_admin_approval === \"true\";\n\n\n// ==========================================\n// GENERATE RUN ID\n// ==========================================\n\nconst run_id = `RUN-${$execution.id}`;\n\n\n// ==========================================\n// VALIDATION\n// ==========================================\n\nconst errors = [];\n\n\n// Position\nif (positions.length === 0) {\n  errors.push(\"Position missing\");\n}\n\n\n// Selection\nif (\n  ![\"rows\", \"positions\", \"all\"].includes(selectionMode)\n) {\n  errors.push(\n    `Invalid selection_mode: \"${selectionMode}\"`\n  );\n}\n\n\n// Rows only required when rows mode\nif (\n  selectionMode === \"rows\" &&\n  selectedRows.length === 0\n) {\n  errors.push(\"Selected rows missing\");\n}\n\n\n// Subject\nif (!subject) {\n  errors.push(\"Message subject is missing\");\n}\n\n\n// Message body\nif (!messageBody) {\n  errors.push(\"Message body is missing\");\n}\n\n\n// Attachment mode\nif (\n  ![\"none\", \"specific\", \"shuffle\"].includes(\n    attachmentMode\n  )\n) {\n  errors.push(\n    `Invalid attachment_mode: \"${attachmentMode}\"`\n  );\n}\n\n\n// Specific attachment\nif (\n  attachmentMode === \"specific\" &&\n  attachmentFileIds.length === 0\n) {\n  errors.push(\"Attachment file is missing\");\n}\n\n\n// Files per email\nif (filesPerEmail < 1) {\n  errors.push(\n    `Invalid files_per_email: \"${filesPerEmail}\"`\n  );\n}\n\n\n// Limits\nif (maxPerRun < 1) {\n  errors.push(\"Invalid max_per_run\");\n}\n\nif (maxPerDay < 1) {\n  errors.push(\"Invalid max_per_day\");\n}\n\n\n// Delay\nif (delayMin < 0) {\n  errors.push(\"Invalid delay_min\");\n}\n\nif (delayMax < delayMin) {\n  errors.push(\n    \"delay_max must be greater than or equal to delay_min\"\n  );\n}\n\n\n// ==========================================\n// CONFIG VALID\n// ==========================================\n\nconst config_valid = errors.length === 0;\n\n\n// ==========================================\n// OUTPUT\n// ==========================================\n\nreturn [\n  {\n    json: {\n      ...input,\n\n      // Run\n      run_id,\n\n      // Selection\n      positions,\n      selection_mode: selectionMode,\n      selected_rows: selectedRows,\n\n      // Message\n      subject,\n      message_body: messageBody,\n      check_text: checkText,\n\n      // Attachments\n      attachment_mode: attachmentMode,\n      attachment_file_ids: attachmentFileIds,\n      files_per_email: filesPerEmail,\n\n      // Settings\n      strict_mode: strictMode,\n      dry_run: dryRun,\n      require_admin_approval: requireAdminApproval,\n\n      // Limits\n      max_per_run: maxPerRun,\n      max_per_day: maxPerDay,\n\n      // Delay\n      delay_min: delayMin,\n      delay_max: delayMax,\n\n      // Validation\n      config_valid,\n      validation_errors: errors\n    }\n  }\n];"
+      },
+      "id": "7e84966c-759b-46fb-b686-bd47a545ec25",
+      "name": "Generate Run ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c6099227-c4dd-4c2f-94ff-880765b95f4c",
+              "leftValue": "={{ $json.config_valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a30cd59d-f325-4171-be8a-ab1dd79bf026",
+      "name": "Config Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1232,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "errorMessage": "Admin configuration is incomplete: set spreadsheetId and adminEmail."
+      },
+      "id": "4d9840ec-338d-4977-b370-2e14bfe601fd",
+      "name": "Config Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1488,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670c420f-5443-43a9-8b72-861d6fe3ea81",
+              "name": "run_id",
+              "value": "={{ $json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "1fb65eb8-738d-4b89-b183-deb3157f96fc",
+              "name": "status",
+              "value": "STARTED",
+              "type": "string"
+            },
+            {
+              "id": "aa1a7912-e52a-4da2-ac2d-b78c3dabedbb",
+              "name": "positions",
+              "value": "={{ $json.positions }}",
+              "type": "string"
+            },
+            {
+              "id": "57014367-d3c4-4912-9785-2c1a7f425daa",
+              "name": "selection_mode",
+              "value": "={{ $json.selection_mode }}",
+              "type": "string"
+            },
+            {
+              "id": "e230f0e7-1e37-42aa-871d-c24e7f1a639f",
+              "name": "selected_rows",
+              "value": "={{ $json.selected_rows }}",
+              "type": "array"
+            },
+            {
+              "id": "2fdf71ba-41a7-4eaf-ad40-30c4d6ada483",
+              "name": "subject",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "05f4da7f-e87a-4d1d-b0ba-41a50148fa2b",
+              "name": "check_text",
+              "value": "={{ $json.check_text }}",
+              "type": "string"
+            },
+            {
+              "id": "af0eb398-e4a1-4927-a159-4b4732f82192",
+              "name": "attachment_mode",
+              "value": "={{ $json.attachment_mode }}",
+              "type": "string"
+            },
+            {
+              "id": "e3a9592e-f524-4e95-83b4-e72131c66cf6",
+              "name": "files_per_email",
+              "value": "={{ $json.files_per_email }}",
+              "type": "number"
+            },
+            {
+              "id": "069c4d9b-5225-42c4-8e59-aa74f7d6ce63",
+              "name": "strict_mode",
+              "value": "={{ $json.strict_mode }}",
+              "type": "boolean"
+            },
+            {
+              "id": "efe4123d-8fe6-45d4-b3e1-2717786d3c67",
+              "name": "dry_run",
+              "value": "={{ $json.dry_run }}",
+              "type": "boolean"
+            },
+            {
+              "id": "b7de9a7b-e83e-4d5e-a130-b5bc644a3bfd",
+              "name": "require_admin_approval",
+              "value": "={{ $json.require_admin_approval }}",
+              "type": "boolean"
+            },
+            {
+              "id": "e35ef505-e32d-4fac-9ce9-ef022fa1d562",
+              "name": "max_per_run",
+              "value": "={{ $json.max_per_run }}",
+              "type": "number"
+            },
+            {
+              "id": "5405fe54-90f6-4b79-aa16-9d3f3a475ded",
+              "name": "max_per_day",
+              "value": "={{ $json.max_per_day }}",
+              "type": "number"
+            },
+            {
+              "id": "397caafc-5bb0-4ac3-b1e8-f6d1b3d235fe",
+              "name": "delay_min",
+              "value": "={{ $json.delay_min }}",
+              "type": "number"
+            },
+            {
+              "id": "5cea3a5e-961b-4c0f-861f-6956ca491c47",
+              "name": "delay_max",
+              "value": "={{ $json.delay_max }}",
+              "type": "number"
+            },
+            {
+              "id": "4ce69fb9-988c-484c-a562-fd4f1470d3bc",
+              "name": "started_at",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "00667ec1-0822-4245-9ced-6c4db034f931",
+              "name": "total_selected",
+              "value": "={{ Array.isArray($json.selected_rows) ? $json.selected_rows.length : 0 }}",
+              "type": "number"
+            },
+            {
+              "id": "bd7739dc-f13d-49cd-a3ec-8e95b864f252",
+              "name": "adminEmail",
+              "value": "={{ $('Admin Configuration').first().json.adminEmail }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "e4245925-7d64-446b-a88b-9857f4f85694",
+      "name": "Init Run Log",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1488,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2ea01254-e9e2-4df5-b6d8-35aa32c91ed7",
+              "leftValue": "={{ $json.Status }}",
+              "rightValue": "Sent",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a67bfed9-9f7a-4e60-9ef1-7e7d49f85d87",
+      "name": "Filter Pending Contacts",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "maxItems": "={{ $('Init Run Log').first().json.batchLimit }}"
+      },
+      "id": "d517515a-3786-48e2-a1ef-54d61af72e83",
+      "name": "Apply Batch Limit",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        864,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const run_id = $('Init Run Log').first().json.run_id;\nconst items = $input.all();\n\nif (\n  !items.length ||\n  (items.length === 1 && Object.keys(items[0].json).length === 0)\n) {\n  return [{ json: { _empty: true } }];\n}\n\nreturn items.map(i => {\n  const data = i.json;\n\n  // Support both lowercase and original Google Sheet headers\n  const name = String(\n    data.name ??\n    data.Name ??\n    data['Full Name'] ??\n    ''\n  ).trim();\n\n  const email = String(\n    data.email ??\n    data.Email ??\n    data['Email Address'] ??\n    ''\n  ).trim().toLowerCase();\n\n  const company = String(\n    data.company ??\n    data.Company ??\n    data['Company Name'] ??\n    data['Company Name '] ??\n    ''\n  ).trim();\n\n  const category = String(\n    data.category ??\n    data.Category ??\n    data['Contact Category'] ??\n    data['Contact Type'] ??\n    ''\n  ).trim();\n\n  return {\n    json: {\n      row_number: data.row_number,\n      name,\n      email,\n      company,\n      category,\n      run_id\n    }\n  };\n});"
+      },
+      "id": "6bd17533-693e-45fd-885d-15aae6715188",
+      "name": "Normalize Fields",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        400
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b596138c-579c-4056-9ba7-5bae670c735e",
+              "leftValue": "={{ !$json._empty }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "64b63838-0688-4aaf-9e2f-51e9676556a6",
+      "name": "Contacts Found?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1440,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "errorMessage": "No pending contacts were found in the selected sheet."
+      },
+      "id": "710b5a7b-4d7c-4356-8ba6-50c73f6d5732",
+      "name": "No Contacts Notice",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const re = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/;\nreturn $input.all().map(i => ({ json: { ...i.json, email_valid: re.test(i.json.email) } }));"
+      },
+      "id": "b0624a74-3170-4208-bad3-ce41e75285b7",
+      "name": "Validate Email Format",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "709196cc-40b6-466c-9c1a-cae37da2dd46",
+              "leftValue": "={{ $json.email_valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0dc815f9-6729-41f7-9138-aaf7f5479ead",
+      "name": "Email Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        336,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "email",
+        "options": {}
+      },
+      "id": "f03581a6-2815-4bd7-b01d-10ba2d22cf32",
+      "name": "Remove Duplicate Emails",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 1.1,
+      "position": [
+        784,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const sent = new Set($input.all()\n  .filter(i => String(i.json.Status || '').toLowerCase() === 'sent')\n  .map(i => String(i.json.Email || '').toLowerCase()));\nreturn $('Remove Duplicate Emails').all().map(i => ({\n  json: { ...i.json, already_sent: sent.has(i.json.email) } }));"
+      },
+      "id": "8c60115d-4646-41f5-a5c8-f63598eb6bb3",
+      "name": "Flag Already Sent",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "5be44f96-a177-4186-8520-5d81ce740794",
+              "leftValue": "={{ !$json.already_sent }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b3e0cadf-2704-4abb-977e-f6b1d221bbe2",
+      "name": "Not Already Sent?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1520,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  const data = item.json;\n\n  // Possible category fields\n  const rawCategory = String(\n    data.category ??\n    data.Category ??\n    data.contact_type ??\n    data.ContactType ??\n    data.type ??\n    data.Type ??\n    data.status ??\n    \"\"\n  ).trim();\n\n  const categoryLower = rawCategory.toLowerCase();\n\n  let category_norm = \"Other\";\n\n  // Lead first\n  if (\n    categoryLower.includes(\"lead\") ||\n    categoryLower.includes(\"prospect\") ||\n    categoryLower.includes(\"potential\")\n  ) {\n    category_norm = \"Lead\";\n  }\n\n  // Client\n  else if (\n    categoryLower.includes(\"client\") ||\n    categoryLower.includes(\"customer\") ||\n    categoryLower.includes(\"buyer\")\n  ) {\n    category_norm = \"Client\";\n  }\n\n  return {\n    json: {\n      ...data,\n\n      // Debug fields\n      original_category: rawCategory,\n      category_norm: category_norm\n    }\n  };\n});"
+      },
+      "id": "79a8c4ef-692b-43e1-a1f3-a15e0243c578",
+      "name": "Categorize Contacts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        1200
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "21bf0cc1-9668-447b-a3db-3d8ffa3f2de0",
+                    "leftValue": "={{ $json.category_norm }}",
+                    "rightValue": "Client",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Client"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "572ff615-2edb-4aff-9bc7-2f614a7ab14b",
+                    "leftValue": "={{ $json.category_norm }}",
+                    "rightValue": "Lead",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Lead"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Other"
+        }
+      },
+      "id": "e2b241c5-90fb-42ff-95dc-8dcf38ba48d7",
+      "name": "Category Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        720,
+        1184
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2a7c1628-08c7-4d3e-8931-beb9c6b9bb6d",
+              "name": "email_subject",
+              "value": "={{ $('Init Run Log').first().json.emailSubject }}",
+              "type": "string"
+            },
+            {
+              "id": "9eacd4ba-53cd-40ef-b59d-5a221f1d15b8",
+              "name": "email_body",
+              "value": "=Dear valued client {{ $json.name }},<br><br>{{ $('Init Run Log').first().json.emailBody.replace('[[name]]', $json.name).replace(/^Hello [^,]*,<br><br>/, '') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "e6739fce-80fe-4444-8926-026771ecba2f",
+      "name": "Client Template",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        1040
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "22fc8be5-817b-43fd-9aec-b624a9c99766",
+              "name": "email_subject",
+              "value": "={{ $('Init Run Log').first().json.emailSubject }}",
+              "type": "string"
+            },
+            {
+              "id": "5512c5b6-8157-410f-86ad-4ea90f065445",
+              "name": "email_body",
+              "value": "=Hello {{ $json.name }},<br><br>{{ $('Init Run Log').first().json.emailBody.replace('[[name]]', $json.name).replace(/^Hello [^,]*,<br><br>/, '') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "5e528eb3-d67d-403c-aa2f-d134f0629343",
+      "name": "Lead Template",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        1200
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43dc87f8-eb7e-4ae1-97d9-8e9f581f38ab",
+              "name": "email_subject",
+              "value": "={{ $('Init Run Log').first().json.emailSubject }}",
+              "type": "string"
+            },
+            {
+              "id": "c74ea665-0632-491f-9bee-dc14f8ec5928",
+              "name": "email_body",
+              "value": "=Hello {{ $json.name }},<br><br>{{ $('Init Run Log').first().json.emailBody.replace('[[name]]', $json.name).replace(/^Hello [^,]*,<br><br>/, '') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "753eed08-6dbe-4571-9c02-47c97c32315c",
+      "name": "Default Template",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        1376
+      ]
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "id": "959c1df8-751e-4041-9cc8-afa17bf0b679",
+      "name": "Merge Categories",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1456,
+        1184
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().map(i => i.json);\nconst by = {};\nitems.forEach(i => by[i.category_norm] = (by[i.category_norm] || 0) + 1);\nconst rows = items.slice(0, 25).map(i => `<tr><td>${i.name}</td><td>${i.email}</td><td>${i.category_norm}</td></tr>`).join('');\nconst summary = Object.entries(by).map(([k, v]) => `${k}: ${v}`).join(' | ');\nconst run_id = $('Init Run Log').first().json.run_id;\nconst html = `<h3>Dry run ${run_id}</h3><p>${items.length} emails ready to send.</p><p>${summary}</p><table border=\"1\" cellpadding=\"4\"><tr><th>Name</th><th>Email</th><th>Category</th></tr>${rows}</table><p>Showing first 25 recipients. Nothing has been sent yet.</p>`;\nreturn [{ json: { run_id, total: items.length, summary, report_html: html } }];"
+      },
+      "id": "6de7fb20-c887-4a96-a399-c965ed90d293",
+      "name": "Build Dry Run Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1648,
+        1200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "={{ $('Init Run Log').first().json.adminEmail }}",
+        "subject": "=Approval needed: dry run {{ $json.run_id }}",
+        "message": "={{ $json.report_html }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Approve & Send",
+            "disapproveLabel": "Reject"
+          }
+        },
+        "options": {}
+      },
+      "id": "5bba2c09-6b41-4ab0-8790-11a51539a20a",
+      "name": "Email Dry Run & Wait for Approval",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        64,
+        1600
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "d16c18a5-36ae-47a1-9f7c-9e037d5fd7a3",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a6af3195-1cd6-4adf-bda1-40774bc13940",
+      "name": "Approved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        1600
+      ]
+    },
+    {
+      "parameters": {
+        "errorMessage": "The admin rejected this run. No emails were sent."
+      },
+      "id": "e9fb70be-ae1c-482c-9c22-ef3e5ff88cf1",
+      "name": "Rejected - Stop Run",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        944,
+        1808
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Merge Categories').all().map(i => ({ json: { ...i.json } }));"
+      },
+      "id": "025a873e-03f7-4874-979c-ee8c0f8560e3",
+      "name": "Restore Approved Contacts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        976,
+        1584
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "61c582c2-ea3d-4480-aebc-be4456930cd3",
+      "name": "Loop Over Contacts",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        0,
+        2000
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4a4bf4cb-a7b9-416b-b211-0d83029d9a98",
+              "leftValue": "={{ !!$binary.data }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "cf65bb0f-665b-41c7-a329-e1259beb1332",
+      "name": "Has Attachment?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        2016
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Loop Over Contacts').item.json.email }}",
+        "subject": "={{ $('Loop Over Contacts').item.json.email_subject }}",
+        "message": "={{ $('Loop Over Contacts').item.json.email_body }}",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "id": "2c70f859-d38b-42cf-95ca-776c7d4f008f",
+      "name": "Send Email With Attachment",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1264,
+        2000
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Loop Over Contacts').item.json.email }}",
+        "subject": "={{ $('Loop Over Contacts').item.json.email_subject }}",
+        "message": "={{ $('Loop Over Contacts').item.json.email_body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "01d1a312-9e16-448b-b9dc-e1dc0ef84558",
+      "name": "Send Email No Attachment",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1264,
+        2208
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8b267d53-c46b-4484-9d78-7249d458c36c",
+              "name": "row_number",
+              "value": "={{ $('Loop Over Contacts').item.json.row_number }}",
+              "type": "number"
+            },
+            {
+              "id": "ed56ba26-ba4d-4a37-9873-8151fd5356e5",
+              "name": "email",
+              "value": "={{ $('Loop Over Contacts').item.json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "7b15f5e6-120f-400b-a618-3a5b4e25b0fb",
+              "name": "name",
+              "value": "={{ $('Loop Over Contacts').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "8724f46a-7458-4bd0-8825-38655e211a85",
+              "name": "category",
+              "value": "={{ $('Loop Over Contacts').item.json.category_norm }}",
+              "type": "string"
+            },
+            {
+              "id": "e1493036-4444-4377-a044-7f9520df6a14",
+              "name": "run_id",
+              "value": "={{ $('Loop Over Contacts').item.json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "3b2fd054-e709-4ea6-8713-3796c76d8180",
+              "name": "send_status",
+              "value": "Sent",
+              "type": "string"
+            },
+            {
+              "id": "21a3ee0a-92b7-411f-a228-a414b172ea34",
+              "name": "sent_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "c7467352-f5ee-4869-bbd3-e3d31fd9493a",
+              "name": "error_message",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bc8647eb-4f35-4f30-aa05-8dd43ea801a9",
+      "name": "Mark Sent",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1712,
+        1984
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "044ade0c-1336-4d81-8d3d-cec54bec0a7a",
+              "name": "row_number",
+              "value": "={{ $('Loop Over Contacts').item.json.row_number }}",
+              "type": "number"
+            },
+            {
+              "id": "beb03d07-bb79-4364-8116-1bfa6380f2ea",
+              "name": "email",
+              "value": "={{ $('Loop Over Contacts').item.json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "cc63dd9b-d369-41a5-ad51-7dc1e2003b99",
+              "name": "name",
+              "value": "={{ $('Loop Over Contacts').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "c1a445ef-aa9a-4fa0-bfe1-1441eca1d6f1",
+              "name": "category",
+              "value": "={{ $('Loop Over Contacts').item.json.category_norm }}",
+              "type": "string"
+            },
+            {
+              "id": "563a5c0c-3210-42cf-89ff-1fd0e4dc90c4",
+              "name": "run_id",
+              "value": "={{ $('Loop Over Contacts').item.json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "b318d41c-c0fd-46a2-8ee6-ffaad571206e",
+              "name": "send_status",
+              "value": "Failed",
+              "type": "string"
+            },
+            {
+              "id": "582d717c-233b-4802-9bd6-6df855c2d51f",
+              "name": "sent_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "9a91b6bb-4c47-4a08-8994-00f8a742dc7a",
+              "name": "error_message",
+              "value": "={{ $json.error?.message || 'Send failed' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2452d838-1e8b-42ca-8f06-d707163f89cc",
+      "name": "Mark Failed",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1712,
+        2224
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ Number($('Init Run Log').first().json.delaySeconds || 30) }}"
+      },
+      "id": "119a9e8a-853f-4a4e-a192-21c2f49520a2",
+      "name": "Wait Between Sends",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2048,
+        2096
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $('Append Send Log').all().map(i => i.json);\nconst sent = rows.filter(r => r.Status === 'Sent').length;\nconst failed = rows.filter(r => r.Status === 'Failed');\nconst run_id = $('Init Run Log').first().json.run_id;\nconst failList = failed.map(r => `<li>${r.Email}: ${r.Error}</li>`).join('');\nconst html = `<h3>Run ${run_id} complete</h3><p>Sent: ${sent}<br>Failed: ${failed.length}<br>Total processed: ${rows.length}</p>${failed.length ? '<p>Failures:</p><ul>' + failList + '</ul>' : ''}`;\nreturn [{ json: { run_id, sent, failed: failed.length, total: rows.length, report_html: html } }];"
+      },
+      "id": "670a3bc7-6776-4914-a172-0e6290002356",
+      "name": "Build Final Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        272,
+        2672
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Init Run Log').first().json.adminEmail }}",
+        "subject": "=Run {{ $json.run_id }} finished: {{ $json.sent }} sent, {{ $json.failed }} failed",
+        "message": "={{ $json.report_html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "3415d760-6481-4e2b-a454-34be7bc7b904",
+      "name": "Email Final Report to Admin",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        576,
+        2672
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// VALIDATE CONFIGURATION (fixed)\n// ==========================================\n\nconst input = $json;\n\n// Default CV file ID (Google Drive). Used when attachment_file_ids is not received.\nconst DEFAULT_ATTACHMENT_FILE_ID = \"1lWTGBIMYhklwgiCRNS6AMQCDeW4HxNw3\";\n\n// Helper: first non-empty value among several possible field names\nconst pick = (...keys) => {\n  for (const k of keys) {\n    const v = input[k];\n    if (v !== undefined && v !== null && String(v).trim() !== \"\") return v;\n  }\n  return \"\";\n};\n\n// ==========================================\n// SPREADSHEET ID (accepts full URL too)\n// ==========================================\n\nlet spreadsheetId = String(\n  pick(\"spreadsheetId\", \"spreadsheet_id\", \"sheet_id\", \"sheetId\")\n).trim();\n\nconst urlMatch = spreadsheetId.match(/\\/d\\/([a-zA-Z0-9_-]+)/);\nif (urlMatch) spreadsheetId = urlMatch[1];\n\n// ==========================================\n// POSITIONS\n// ==========================================\n\nconst rawPositions = pick(\"positions\", \"position\");\nconst positions = Array.isArray(rawPositions)\n  ? rawPositions.filter(Boolean)\n  : String(rawPositions)\n      .split(\",\")\n      .map(p => p.trim())\n      .filter(Boolean);\n\n// ==========================================\n// SELECTED ROWS\n// ==========================================\n\nconst selectedRows = Array.isArray(input.selected_rows)\n  ? input.selected_rows\n  : [];\n\n// ==========================================\n// SELECTION MODE\n// ==========================================\n\nlet selectionMode = String(input.selection_mode || \"\").trim().toLowerCase();\n\nif (!selectionMode) {\n  if (selectedRows.length > 0) selectionMode = \"rows\";\n  else if (positions.length > 0) selectionMode = \"positions\";\n  else selectionMode = \"all\";\n}\n\n// ==========================================\n// SUBJECT / BODY / CHECK TEXT\n// ==========================================\n\nconst subject = String(\n  pick(\"subject\", \"emailSubject\", \"email_subject\")\n).trim();\n\nconst messageBody = String(\n  pick(\"message_body\", \"messageBody\", \"emailBody\", \"email_body\")\n).trim();\n\nconst checkText = String(\n  pick(\"check_text\", \"checkText\")\n).trim();\n\n// ==========================================\n// ATTACHMENTS\n// ==========================================\n\nconst attachmentMode = String(\n  input.attachment_mode || \"none\"\n).trim().toLowerCase();\n\nconst rawAttachmentIds = pick(\n  \"attachment_file_ids\",\n  \"attachment_file_id\",\n  \"attachmentFileIds\",\n  \"attachmentFileId\",\n  \"attachment_ids\",\n  \"file_ids\",\n  \"file_id\"\n);\n\nlet attachmentFileIds = (\n  Array.isArray(rawAttachmentIds)\n    ? rawAttachmentIds\n    : String(rawAttachmentIds).split(/[,\\n;]+/)\n)\n  .map(s => String(s).trim())\n  .filter(Boolean);\n\n// Fallback: if mode is \"specific\" but no ID arrived, use the default CV\nif (attachmentMode === \"specific\" && attachmentFileIds.length === 0) {\n  attachmentFileIds = [DEFAULT_ATTACHMENT_FILE_ID];\n}\n\n// ==========================================\n// NUMBERS (empty string -> default)\n// ==========================================\n\nconst num = (value, fallback) => {\n  if (value === \"\" || value === null || value === undefined) return fallback;\n  const n = Number(value);\n  return Number.isFinite(n) ? n : fallback;\n};\n\nconst filesPerEmail = num(input.files_per_email, 1);\nconst maxPerRun     = num(input.max_per_run, 50);\nconst maxPerDay     = num(input.max_per_day, 100);\nconst delayMin      = num(input.delay_min, 30);\nconst delayMax      = num(input.delay_max, 90);\n\n// ==========================================\n// VALIDATION\n// ==========================================\n\nconst errors = [];\n\nif (!spreadsheetId) {\n  errors.push(\"spreadsheetId missing\");\n}\n\nif (![\"rows\", \"positions\", \"all\"].includes(selectionMode)) {\n  errors.push(`Invalid selection_mode: \"${selectionMode}\"`);\n}\n\n// Positions are required ONLY when mode = positions\nif (selectionMode === \"positions\" && positions.length === 0) {\n  errors.push(\"Position missing\");\n}\n\n// Rows are required ONLY when mode = rows\nif (selectionMode === \"rows\" && selectedRows.length === 0) {\n  errors.push(\"Selected rows missing. Either select rows or use selection_mode = positions.\");\n}\n\nif (!subject) errors.push(\"Subject missing\");\nif (!messageBody) errors.push(\"Message body missing\");\nif (!checkText) errors.push(\"Check text missing\");\n\nif (![\"none\", \"specific\", \"shuffle\"].includes(attachmentMode)) {\n  errors.push(`Invalid attachment_mode: \"${attachmentMode}\"`);\n}\n\nif (attachmentMode === \"specific\" && attachmentFileIds.length === 0) {\n  errors.push(\"Attachment file missing\");\n}\n\nif (filesPerEmail < 1) errors.push(\"files_per_email must be at least 1\");\nif (maxPerRun < 1)     errors.push(\"max_per_run must be at least 1\");\nif (maxPerDay < 1)     errors.push(\"max_per_day must be at least 1\");\nif (delayMin < 0)      errors.push(\"delay_min cannot be negative\");\nif (delayMax < delayMin) errors.push(\"delay_max must be greater than or equal to delay_min\");\n\nconst config_valid = errors.length === 0;\n\n// ==========================================\n// OUTPUT\n// ==========================================\n\nreturn [\n  {\n    json: {\n      ...input,\n\n      run_id: input.run_id || `RUN-${$execution.id}`,\n\n      spreadsheetId,\n      positions,\n      selection_mode: selectionMode,\n      selected_rows: selectedRows,\n\n      subject,\n      message_body: messageBody,\n      check_text: checkText,\n\n      attachment_mode: attachmentMode,\n      attachment_file_ids: attachmentFileIds,\n      files_per_email: filesPerEmail,\n\n      max_per_run: maxPerRun,\n      max_per_day: maxPerDay,\n      delay_min: delayMin,\n      delay_max: delayMax,\n\n      config_valid,\n      validation_errors: errors,\n\n      // Debug: what the Code node actually received\n      debug_received_keys: Object.keys(input),\n      debug_attachment_raw: rawAttachmentIds\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        976,
+        0
+      ],
+      "id": "dd7c0c81-60e6-4db7-91e6-87c5994cbac4",
+      "name": "Validate Configuration"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "CONTACTS",
+          "cachedResultUrl": ""
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        96,
+        400
+      ],
+      "id": "53ab8b33-e3db-4927-9ba9-9ed53a9b58f5",
+      "name": "Get row(s) in sheet"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1567727419,
+          "mode": "list",
+          "cachedResultName": "Send_Log",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Row Number": "={{ $json.row_number }}",
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Run ID": "={{ $('Email Valid?').item.json.run_id }}",
+            "Position": "={{ $('Apply Batch Limit').item.json.Position }}",
+            "Status": "={{ $('Init Run Log').item.json.status }}",
+            "Subject": "={{ $('Init Run Log').item.json.subject }}",
+            "Check Text": "={{ $('Init Run Log').item.json.check_text }}",
+            "Attachment": "={{ $('Webhook').item.json.body.attachment_file_ids[0] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Run ID",
+              "displayName": "Run ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Row Number",
+              "displayName": "Row Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Position",
+              "displayName": "Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Check Text",
+              "displayName": "Check Text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Sent At",
+              "displayName": "Sent At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Attachment",
+              "displayName": "Attachment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Error",
+              "displayName": "Error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        784
+      ],
+      "id": "534d29e5-0a78-4fd5-aea1-da5968890967",
+      "name": "Append row in sheet"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_DRIVE_FILE_ID",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        496,
+        2016
+      ],
+      "id": "1069589d-d00c-43bc-8682-50952a419fdd",
+      "name": "Download file",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "CONTACTS",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $json.row_number }}",
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Category": "={{ $json.category }}",
+            "Status": "={{ $json.send_status }}",
+            "Company": "={{ $('Get row(s) in sheet').item.json.Company }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        0,
+        2400
+      ],
+      "id": "9d7cc987-b1d8-4940-857f-013066f3d4c3",
+      "name": "Update row in sheet1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1567727419,
+          "mode": "list",
+          "cachedResultName": "Send_Log",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Run ID": "={{ $json.run_id }}",
+            "Row Number": "={{ $json.row_number }}",
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Status": "={{ $json.send_status }}",
+            "Sent At": "={{ $json.sent_at }}",
+            "Error": "={{ $json.error_message }}",
+            "Position": "={{ $('Init Run Log').item.json.positions }}",
+            "Check Text": "={{ $('Append row in sheet').item.json['Check Text'] }}",
+            "Subject": "={{ $('Append row in sheet').item.json.Subject }}",
+            "Attachment": "={{ $('Append row in sheet').item.json.Attachment }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Run ID",
+              "displayName": "Run ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Row Number",
+              "displayName": "Row Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Position",
+              "displayName": "Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Check Text",
+              "displayName": "Check Text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sent At",
+              "displayName": "Sent At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Attachment",
+              "displayName": "Attachment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error",
+              "displayName": "Error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        0,
+        2672
+      ],
+      "id": "110fd159-c287-442a-ace7-b51806255a07",
+      "name": "Append Send Log"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Admin Start": {
+      "main": [
+        [
+          {
+            "node": "Admin Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Admin Configuration": {
+      "main": [
+        [
+          {
+            "node": "Generate Run ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Run ID": {
+      "main": [
+        [
+          {
+            "node": "Validate Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config Valid?": {
+      "main": [
+        [
+          {
+            "node": "Init Run Log",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Config Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Init Run Log": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Pending Contacts": {
+      "main": [
+        [
+          {
+            "node": "Apply Batch Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apply Batch Limit": {
+      "main": [
+        [
+          {
+            "node": "Normalize Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Fields": {
+      "main": [
+        [
+          {
+            "node": "Contacts Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contacts Found?": {
+      "main": [
+        [
+          {
+            "node": "Validate Email Format",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Contacts Notice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Email Format": {
+      "main": [
+        [
+          {
+            "node": "Email Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Valid?": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicate Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicate Emails": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag Already Sent": {
+      "main": [
+        [
+          {
+            "node": "Not Already Sent?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Not Already Sent?": {
+      "main": [
+        [
+          {
+            "node": "Categorize Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Categorize Contacts": {
+      "main": [
+        [
+          {
+            "node": "Category Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Category Router": {
+      "main": [
+        [
+          {
+            "node": "Client Template",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Lead Template",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Default Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Client Template": {
+      "main": [
+        [
+          {
+            "node": "Merge Categories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Template": {
+      "main": [
+        [
+          {
+            "node": "Merge Categories",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Default Template": {
+      "main": [
+        [
+          {
+            "node": "Merge Categories",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge Categories": {
+      "main": [
+        [
+          {
+            "node": "Build Dry Run Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Dry Run Report": {
+      "main": [
+        [
+          {
+            "node": "Email Dry Run & Wait for Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Dry Run & Wait for Approval": {
+      "main": [
+        [
+          {
+            "node": "Approved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved?": {
+      "main": [
+        [
+          {
+            "node": "Restore Approved Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rejected - Stop Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore Approved Contacts": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Contacts": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append Send Log",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Attachment?": {
+      "main": [
+        [
+          {
+            "node": "Send Email With Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Email No Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email With Attachment": {
+      "main": [
+        [
+          {
+            "node": "Mark Sent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email No Attachment": {
+      "main": [
+        [
+          {
+            "node": "Mark Sent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Sent": {
+      "main": [
+        [
+          {
+            "node": "Wait Between Sends",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Failed": {
+      "main": [
+        [
+          {
+            "node": "Wait Between Sends",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait Between Sends": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Final Summary": {
+      "main": [
+        [
+          {
+            "node": "Email Final Report to Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Configuration": {
+      "main": [
+        [
+          {
+            "node": "Config Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter Pending Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Flag Already Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Has Attachment?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet1": {
+      "main": [
+        []
+      ]
+    },
+    "Append Send Log": {
+      "main": [
+        [
+          {
+            "node": "Build Final Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}

@@ -1,0 +1,89 @@
+HOW TO PUT YOUR WEBSITE ONLINE (simple version)
+================================================
+
+YOUR ADMIN PANEL LOGIN (for testing)
+   Address:   your-website.com/admin/
+   Username:  admin
+   Password:  Admin@123
+
+   >>> CHANGE THIS PASSWORD THE VERY FIRST TIME YOU SIGN IN. <<<
+   Anyone who knows these details could edit your website.
+
+
+STEP 0 - ONE IMPORTANT THING TO KNOW
+The Admin Panel needs a small program (called Node.js) running on your hosting.
+Very basic "upload-only" hosting cannot run it. The website itself would still
+show, but the Admin Panel could not save anything.
+When you buy or choose hosting, look for the words "Node.js" (for example
+"Setup Node.js App" in cPanel, or a plan that says it supports Node.js).
+If your hosting does not have it, tell me which hosting you use and I will help
+you choose a way that works.
+
+
+OPTION A - HOSTING WITH CPANEL (most common)
+1. Sign in to your hosting account and open "cPanel".
+2. Click "Setup Node.js App", then "Create Application".
+3. Fill in:
+     Node.js version ........ the newest one in the list (16 or higher)
+     Application mode ....... Production
+     Application root ....... type a folder name, for example:  huda-site
+     Application URL ........ choose your domain name
+     Application startup file  server.js
+   Then click "Create".
+4. Go back to cPanel and open "File Manager".
+5. Open the folder you named in step 3 (for example huda-site).
+6. Click "Upload" and upload the file  huda-portfolio.zip  that I gave you.
+7. Click the ZIP file once, then click "Extract". Open the new folder that appears.
+   Select everything inside it (index.html, server.js, the css, js, admin folders...),
+   "Move" it up one level into huda-site, so that server.js sits directly inside
+   huda-site. Then delete the empty folder and the ZIP file.
+8. Go back to "Setup Node.js App" and click "Restart" next to your application.
+9. Open your website address in a browser. Your site should appear.
+10. Open your-website.com/admin/ and sign in (details above).
+
+
+OPTION B - TRY IT ON YOUR OWN COMPUTER FIRST
+1. Install Node.js from nodejs.org (the big green "LTS" button), then restart your computer.
+2. Unzip huda-portfolio.zip to a folder.
+3. Open that folder, click the address bar at the top, type  cmd  and press Enter
+   (on Mac: right-click the folder, "New Terminal at Folder").
+4. Type   node server.js   and press Enter.
+5. In your browser, open  http://localhost:3000/   (website)
+   and  http://localhost:3000/admin/   (Admin Panel).
+   Close the black window to stop it.
+
+
+HOW TO CHANGE THE ADMIN PASSWORD THE FIRST TIME YOU SIGN IN
+1. Go to your-website.com/admin/ and sign in with:  admin  /  Admin@123
+2. You will see an orange box saying you are still using the default password.
+   Click "Change password now". (Or click "Password & account" on the left.)
+3. Fill in the form:
+     Current password ............ Admin@123
+     Username .................... keep "admin" or choose your own
+     New password ................ at least 8 characters; mix letters, numbers, symbols
+     Repeat new password ......... type it again
+4. Click "Change password". You will see a green confirmation.
+5. Write the new password somewhere safe. From now on, sign in with it.
+   (The orange warning box disappears once you have changed it.)
+
+If you ever forget the password: in File Manager, open the "private" folder,
+delete the file  auth.json , and restart the Node.js app. The login goes back to
+admin / Admin@123. Sign in and change it again straight away.
+
+
+USING THE ADMIN PANEL
+- Click a section on the left (Home page, Services, Portfolio, About page,
+  Awards & achievements, Contact & social links, All images, Colour theme).
+- Make your changes, then click the orange "Save changes" button at the bottom.
+  Your live website shows the new version the next time a page is opened or refreshed.
+- Colour theme: click "Use this theme". It saves and goes live straight away.
+- Pictures: use "Upload / change picture" (JPG, PNG, GIF or WebP, up to 5 MB each).
+
+
+KEEP YOUR WORK SAFE
+- Everything you edit is stored in three folders: "data", "uploads" and "private".
+  Download copies of them now and then (File Manager > Compress > Download).
+- If you ever upload a newer version of the website files, do NOT overwrite those
+  three folders, or you will lose your edits and uploaded pictures.
+- Use https:// for your domain (your hosting usually offers a free "SSL" certificate).
+  Please turn it on before using the Admin Panel on the internet.

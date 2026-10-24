@@ -1,0 +1,32 @@
+HUDA PORTFOLIO — GITHUB + VERCEL QUICK GUIDE
+
+WHAT THIS PACKAGE DOES
+- Keeps the existing static portfolio pages and styling.
+- Adds four n8n workflow JSON files under /workflows/.
+- Adds four portfolio cards with a download link in each detail popup.
+- Includes vercel.json for static hosting.
+
+IMPORTANT LIMITATION
+The current Admin Panel depends on server.js and local file writes. That backend will NOT work as-is on a static Vercel deployment. The public portfolio can work; admin login, saving edits, and uploads need a separate backend/serverless conversion. Do not rely on /admin/ on Vercel.
+
+DEPLOY
+1. Extract this ZIP. Open the huda-portfolio folder.
+2. Go to https://github.com/new and create a repository named huda-portfolio. Public or Private is your choice; public makes source visible.
+3. In the new repo, choose Add file > Upload files. Upload the CONTENTS of this huda-portfolio folder (index.html, about.html, css, js, workflows, vercel.json, etc.), not the outer folder itself. Commit changes.
+4. Go to https://vercel.com/new and sign in with GitHub.
+5. Import the huda-portfolio repository.
+6. Framework Preset: Other. Build Command: leave blank (or disable it). Output Directory: . (a single dot). Install Command: leave blank.
+7. Click Deploy.
+8. When complete, click Visit. Share the resulting https://....vercel.app link.
+9. Later code changes pushed to the connected GitHub repository automatically trigger a new Vercel deployment.
+
+TEST
+- Open the public URL.
+- Open Portfolio.
+- Open each of the four new cards and test Download n8n Workflow JSON.
+- Test Home, About, Services, Contact, and navigation.
+
+SECURITY / WORKFLOW NOTES
+- Do not upload private/auth.json, API keys, tokens, passwords, or real customer data.
+- Workflow JSON files are downloadable by visitors; treat them as public. Review them for secrets before publishing.
+- JSON files do not run automatically just because they are hosted. Import them into n8n, configure credentials, inspect all nodes, and test before enabling live actions.

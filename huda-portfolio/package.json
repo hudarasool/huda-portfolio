@@ -1,0 +1,14 @@
+{
+  "name": "huda-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Huda's AI Automation portfolio with Admin Panel",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo Static portfolio ready for Vercel"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
